@@ -1,8 +1,6 @@
 name: Deploy staging
-on:
-  workflow_dispatch:
-    tags:
-      description: 'Create a new release from master and deploy to staging'
+on: [workflow_dispatch]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
