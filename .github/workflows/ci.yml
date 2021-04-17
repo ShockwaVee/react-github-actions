@@ -39,9 +39,9 @@ jobs:
         with:
           name: build
           path: build
-      - name: Create a release
+      - name: Create a prerelease
         run: npx semantic-release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to Staging
