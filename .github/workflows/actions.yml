@@ -4,6 +4,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: ./.github/actions/issue
+        id: issue
+        with:
+          token: ${{secrets.GITHUB_TOKEN }}
+          title: 'Issue'
+          body: 'Body'
+          assignees: 'ShockwaVee'
       - uses: ./.github/actions/hello
         id: hello
         with:
@@ -11,3 +18,4 @@ jobs:
       - run: |
           echo "Time: ${{steps.hello.outputs.time}}"
           echo $HELLO
+          echo ${{ steps.issue.outputs.issue }}
