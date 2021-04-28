@@ -1,0 +1,14 @@
+name: Hello world
+author: Davor Tvoric
+description: Some description
+inputs:
+  who-to-greet:
+    description: 'Who to greet'
+    required: true
+    default: World
+outputs:
+  time:
+    description: 'The greeting time'
+runs:
+  using: 'node12'
+  main: 'index.js'
