@@ -16,6 +16,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
       - run: npm ci ## installs dependencies, but faster - similar to yarn install --frozen-lockfile 
-      - run: npm run lint:check # make sure you have this script available in your package.json
-      - run: npm run test:unit # make sure you have this script available in your package.json
-
+      - run: npm run lint:check
+      - run: npm test -- --coverage
