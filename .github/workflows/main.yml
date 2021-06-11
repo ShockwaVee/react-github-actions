@@ -2,7 +2,7 @@ name: "Verify build"
 on:
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   verifyBuild:
     runs-on: ubuntu-latest
