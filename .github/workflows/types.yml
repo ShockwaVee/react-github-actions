@@ -27,9 +27,11 @@ jobs:
           repository: bornfight/maboo-backend
           token: ${{ secrets.PAT }}
           path: maboo-backend
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
         with:
           path: maboo-frontend
+          repository: bornfight/maboo-front-new
+          token: ${{ secrets.PAT }}
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
@@ -47,10 +49,7 @@ jobs:
           ls
           cd maboo-frontend
           yarn install --frozen-lockfile --production=false
-          yarn add graphql
-          yarn add -D @graphql-codegen/cli
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
-          ls node_modules/.bin
-          yarn graphql-codegen
+          gql-gen
