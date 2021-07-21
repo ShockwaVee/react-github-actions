@@ -16,6 +16,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: decimal
       - name: Check out my other private repo
         uses: actions/checkout@master
         with:
@@ -30,11 +35,6 @@ jobs:
           ls
           cd maboo-backend
           ls
-      - name: Setup PHP with PECL extension
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          extensions: decimal
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
