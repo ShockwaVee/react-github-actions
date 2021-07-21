@@ -48,4 +48,4 @@ jobs:
           cd maboo-frontend
           yarn install --frozen-lockfile
           ls
-          gql-gen
+          yarn gql-gen
