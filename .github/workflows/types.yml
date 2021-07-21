@@ -47,9 +47,10 @@ jobs:
           ls
           cd maboo-frontend
           yarn install --frozen-lockfile --production=false
-          yarn add -D graphql @graphql-codegen/cli
+          yarn add graphql
+          yarn add -D @graphql-codegen/cli
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
           ls node_modules/.bin
-          node_modules/.bin/gql-gen init
+          yarn graphql-codegen
