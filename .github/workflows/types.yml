@@ -37,7 +37,9 @@ jobs:
           ls
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: |
+          cd maboo-backend
+          composer install --prefer-dist --no-progress --no-suggest
       - name: Run a multi-line script
         run: |
           ls
