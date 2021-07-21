@@ -50,4 +50,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
+          ls node_modules/.bin
           gql-gen
