@@ -25,7 +25,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: maboo-front
-      - run: cd maboo-backend
+      - name: Enter repo
+        run: |
+          ls
+          cd maboo-backend
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
