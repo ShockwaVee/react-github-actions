@@ -46,7 +46,7 @@ jobs:
         run: |
           ls
           cd maboo-frontend
-          yarn install --frozen-lockfile --production false
+          yarn install
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
