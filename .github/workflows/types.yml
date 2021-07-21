@@ -30,8 +30,6 @@ jobs:
       - uses: actions/checkout@master
         with:
           path: maboo-frontend
-          repository: bornfight/maboo-front-new
-          token: ${{ secrets.PAT }}
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
@@ -52,8 +50,8 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
-          ls
-          node_modules/.bin/gql-gen
-          yarn lint:ts
+          touch test.js
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
+        with:
+          path: ./maboo-frontend
