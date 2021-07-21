@@ -47,5 +47,4 @@ jobs:
           ls
           cd maboo-frontend
           yarn install --frozen-lockfile
-          cat schema.graphql
           gql-gen
