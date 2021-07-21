@@ -21,6 +21,9 @@ jobs:
         with:
           repository: bornfight/maboo-backend
           token: ${{ secrets.PAT }}
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
       - name: Run a multi-line script
         run: |
           bin/console graphql:dump-schema --file  schema --format graphql
