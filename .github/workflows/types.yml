@@ -52,4 +52,4 @@ jobs:
         run: |
           cd maboo-frontend
           ls node_modules/.bin
-          gql-gen
+          node_modules/.bin/gql-gen init
