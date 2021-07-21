@@ -53,4 +53,7 @@ jobs:
         run: |
           cd maboo-frontend
           ls
-          node_modules/.bin/gql-gen inir
+          node_modules/.bin/gql-gen init
+          yarn lint:ts
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
