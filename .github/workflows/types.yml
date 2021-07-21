@@ -38,6 +38,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           ls
+          touch maboo-frontend/schema.graphql
           cd maboo-backend
           bin/console graphql:dump-schema --file  ../maboo-frontend/schema.graphql --format graphql
           ls
