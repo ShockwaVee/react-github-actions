@@ -29,7 +29,7 @@ jobs:
           path: maboo-backend
       - uses: actions/checkout@v2
         with:
-          path: maboo-front
+          path: maboo-frontend
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
