@@ -48,8 +48,9 @@ jobs:
         run: |
           ls
           cd maboo-frontend
-          yarn install --frozen-lockfile --production=false
+          yarn install --frozen-lockfile
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
-          gql-gen
+          ls
+          node_modules/.bin/gql-gen inir
