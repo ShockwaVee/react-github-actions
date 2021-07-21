@@ -46,6 +46,6 @@ jobs:
         run: |
           ls
           cd maboo-frontend
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --production false
           ls
-          yarn gql-gen
+          gql-gen
