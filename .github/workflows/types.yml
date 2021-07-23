@@ -20,7 +20,7 @@ jobs:
         id: composer-cache
         uses: actions/cache@v2
         with:
-          path: "./maboo-backend/vendor"
+          path: vendor
           key: php-${{ hashFiles('**/composer.lock') }}
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
