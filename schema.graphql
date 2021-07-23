@@ -1,0 +1,2638 @@
+"""Accommodation"""
+type Accommodation {
+  """Internal identifier"""
+  id: ID!
+
+  """Accommodation human-readable code"""
+  code: String!
+  guestCapacity: Int!
+  guestAdditionalCapacity: Int!
+  accommodationTypeCategory: AccommodationTypeCategory!
+  land: Land!
+  tags: [Tag!]!
+}
+
+input AccommodationFilter {
+  accommodationTypeCategory: ToOneRelationshipFilter
+  tags: ToManyRelationshipFilter
+}
+
+"""Accommodation Type"""
+type AccommodationType {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+  hasDimensions: Boolean!
+  categories: [AccommodationTypeCategory!]!
+}
+
+"""Accommodation Type Category"""
+type AccommodationTypeCategory {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+  quality: Int!
+  accommodations: [Accommodation!]!
+  accommodationType: AccommodationType!
+}
+
+type AccommodationTypeCategoryBundleItem implements BundleItem {
+  """Internal identifier"""
+  id: ID!
+  price: Float!
+  accommodationTypeCategory: AccommodationTypeCategory!
+}
+
+input AccommodationTypeCategoryBundleItemInput {
+  price: Float!
+  accommodationTypeCategoryId: ID
+}
+
+type AccommodationTypeCategoryCondition implements AutoApplyCondition {
+  """Internal identifier"""
+  id: ID!
+  subject: ConditionSubject!
+  accommodationTypeCategory: AccommodationTypeCategory!
+}
+
+input AccommodationTypeCategoryConditionInput {
+  accommodationTypeCategoryId: ID!
+}
+
+input AddAutoApplyConditionsInput {
+  serviceId: ID!
+  autoApplyConditions: AutoApplyConditionsInput!
+}
+
+type AddAutoApplyConditionsPayload {
+  service: Service!
+}
+
+input AddBundleItemInput {
+  bundleId: ID!
+  accommodationTypeCategoryBundleItem: AccommodationTypeCategoryBundleItemInput
+  facilityEquipmentTypeBundleItem: FacilityEquipmentTypeBundleItemInput
+  additionalServiceBundleItem: AdditionalServiceBundleItemInput
+}
+
+type AddBundleItemPayload {
+  item: BundleItem!
+}
+
+input AddDiscountItemInput {
+  """Discount for which this item is"""
+  discountId: ID!
+
+  """Service for which the discount is"""
+  serviceId: ID!
+
+  """Amount with up to two decimal places"""
+  discountAmount: Float!
+}
+
+type AddDiscountItemPayload {
+  discountItem: DiscountItem!
+}
+
+input AddPriceListItemInput {
+  """Price list for which this item is"""
+  priceListId: ID!
+
+  """Service for which the price is"""
+  serviceId: ID!
+
+  """From when should this price be applied"""
+  dateFrom: DateTimeTz!
+
+  """Price with up to two decimal places"""
+  price: String!
+}
+
+type AddPriceListItemPayload {
+  priceListItem: PriceListItem!
+}
+
+input AddReservationAccommodationAdditionalServiceInput {
+  """Reservation accommodation identifier"""
+  reservationAccommodationId: ID!
+
+  """Time during which additional service is requested"""
+  during: DateTimeRangeInput!
+
+  """Additional service identifier"""
+  serviceId: ID!
+}
+
+type AddReservationAccommodationAdditionalServicePayload {
+  """Newly added additional service"""
+  additionalService: ReservationAccommodationAdditionalService!
+}
+
+input AddReservationAccommodationFacilityEquipmentInput {
+  """Reservation accommodation identifier"""
+  reservationAccommodationId: ID!
+
+  """Time during which additional service is requested"""
+  during: DateTimeRangeInput!
+
+  """Facility equipment identifier"""
+  facilityEquipmentTypeId: ID!
+}
+
+type AddReservationAccommodationFacilityEquipmentPayload {
+  """Newly added facility equipment"""
+  facilityEquipment: ReservationAccommodationFacilityEquipment!
+}
+
+input AddReservationAccommodationInput {
+  """Reservation identifier"""
+  reservationId: ID!
+
+  """Time during which accommodation is requested"""
+  during: DateTimeRangeInput!
+
+  """Additional accommodation type category identifier"""
+  accommodationTypeCategoryId: ID!
+
+  """Accommodation that is reserved"""
+  accommodationId: ID
+}
+
+type AddReservationAccommodationPayload {
+  """Newly added accommodation"""
+  accommodation: ReservationAccommodation!
+}
+
+input AddReservationDiscountInput {
+  """Reservation id"""
+  reservationId: ID!
+
+  """Discount id"""
+  discountId: ID!
+}
+
+type AddReservationDiscountPayload {
+  """Reservation to which a discount is assigned"""
+  reservation: Reservation!
+}
+
+input AddReservationFileInput {
+  """Reservation identifier"""
+  reservationId: ID!
+
+  """File to be uploaded"""
+  file: UploadedFile!
+}
+
+type AddReservationFilePayload {
+  """Uploaded reservation file"""
+  file: ReservationFile!
+}
+
+input AddVisitorAccommodationInput {
+  """Visitor for which a new accommodation is being added"""
+  visitorId: String!
+
+  """Accommodation id that is under retention"""
+  accommodationId: String!
+
+  """Time period during which visitor wants to reserve accommodation"""
+  during: DateTimeRangeInput!
+}
+
+type AddVisitorAccommodationPayload {
+  visitorAccommodation: VisitorAccommodation!
+}
+
+type AdditionalServiceBundleItem implements BundleItem {
+  """Internal identifier"""
+  id: ID!
+  price: Float!
+  service: Service!
+}
+
+input AdditionalServiceBundleItemInput {
+  price: Float!
+  serviceId: ID
+}
+
+input ArchiveBundleInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type ArchiveBundlePayload {
+  bundle: Bundle!
+}
+
+input ArchiveDiscountInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type ArchiveDiscountPayload {
+  discount: Discount!
+}
+
+input ArchiveServiceInput {
+  """Service ID"""
+  id: ID!
+}
+
+type ArchiveServicePayload {
+  service: Service!
+}
+
+input AssignReservationBookerInput {
+  """Internal identifier"""
+  id: ID!
+
+  """New booker that should be assigned"""
+  bookerId: ID!
+}
+
+type AssignReservationBookerPayload {
+  """Reservation for which the booker is assigned"""
+  reservation: Reservation!
+}
+
+interface AutoApplyCondition {
+  """Internal identifier"""
+  id: ID!
+  subject: ConditionSubject!
+}
+
+input AutoApplyConditionsInput {
+  accommodationTypeCategoryConditions: [AccommodationTypeCategoryConditionInput!]!
+  guestAgeConditions: [GuestAgeConditionInput!]!
+}
+
+type AutoApplyDiscount implements DiscountInterface {
+  """Internal identifier"""
+  id: ID!
+
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  items: [DiscountItem!]!
+
+  """Whether a discount is archived or not"""
+  archived: Boolean!
+  reservationRange: DateTimeRange
+  autoApplyRange: DateTimeRange!
+}
+
+input BooleanFilter {
+  equals: Boolean!
+}
+
+type Bundle {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+  note: String
+  during: DateTimeRange!
+  archived: Boolean!
+  items: [BundleItem!]!
+}
+
+interface BundleItem {
+  """Internal identifier"""
+  id: ID!
+  price: Float!
+}
+
+input BundleItemsInput {
+  accommodationTypeCategoryBundleItems: [AccommodationTypeCategoryBundleItemInput]
+  facilityEquipmentTypeBundleItems: [FacilityEquipmentTypeBundleItemInput]
+  additionalServiceBundleItems: [AdditionalServiceBundleItemInput]
+}
+
+enum ConditionSubject {
+  ACCOMMODATION
+  GUEST
+  EQUIPMENT
+}
+
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
+}
+
+type Country {
+  """Internal identifier"""
+  id: ID!
+  code: String!
+  name: String!
+}
+
+input CreateAccommodationInput {
+  code: String!
+  guestCapacity: Int!
+  guestAdditionalCapacity: Int
+
+  """Accommodation type category ID"""
+  accommodationTypeCategoryId: ID!
+
+  """Land ID"""
+  landId: ID!
+
+  """Tag codes used for this accommodation"""
+  tags: [String!]!
+}
+
+type CreateAccommodationPayload {
+  accommodation: Accommodation!
+}
+
+input CreateAccommodationTypeCategoryInput {
+  name: String!
+  quality: Int!
+
+  """Accommodation type ID"""
+  accommodationTypeId: ID!
+}
+
+type CreateAccommodationTypeCategoryPayload {
+  accommodationTypeCategory: AccommodationTypeCategory!
+}
+
+input CreateAccommodationTypeInput {
+  name: String!
+  hasDimensions: Boolean!
+}
+
+type CreateAccommodationTypePayload {
+  accommodationType: AccommodationType!
+}
+
+input CreateAutoApplyDiscountInput {
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  items: [CreateDiscountItemInput!]!
+  reservationRange: DateTimeRangeInput
+  autoApplyRange: DateTimeRangeInput!
+}
+
+type CreateAutoApplyDiscountPayload {
+  discount: AutoApplyDiscount!
+}
+
+input CreateBundleInput {
+  name: String!
+  note: String
+  during: DateTimeRangeInput!
+  items: BundleItemsInput
+}
+
+type CreateBundlePayload {
+  bundle: Bundle!
+}
+
+input CreateCountryInput {
+  code: String!
+  name: String!
+}
+
+type CreateCountryPayload {
+  country: Country!
+}
+
+input CreateCurrencyInput {
+  name: String!
+  isoCode: String!
+}
+
+type CreateCurrencyPayload {
+  currency: Currency!
+}
+
+input CreateDiscountInput {
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  items: [CreateDiscountItemInput!]!
+}
+
+input CreateDiscountItemInput {
+  """Service for which the price is"""
+  serviceId: ID!
+
+  """Amount with up to two decimal places"""
+  discountAmount: Float!
+}
+
+type CreateDiscountPayload {
+  discount: Discount!
+}
+
+input CreateDownPaymentAllocationInput {
+  """Down payment amount"""
+  amount: Float!
+
+  """ID of the down payment"""
+  downPaymentId: ID!
+
+  """ID of the reservation"""
+  reservationId: ID!
+}
+
+type CreateDownPaymentAllocationPayload {
+  downPaymentAllocation: DownPaymentAllocation!
+}
+
+input CreateDownPaymentInput {
+  """Down payment amount"""
+  amount: Float!
+
+  """ID of the currency"""
+  currencyId: ID!
+
+  """ID of the person"""
+  personId: ID!
+}
+
+type CreateDownPaymentPayload {
+  downPayment: DownPayment!
+}
+
+input CreateEmailTemplateInput {
+  content: String!
+  languageId: String!
+  name: String!
+}
+
+type CreateEmailTemplatePayload {
+  template: EmailTemplate!
+}
+
+input CreateFacilityEquipmentInput {
+  name: String!
+
+  """Facility equipment type type ID"""
+  facilityEquipmentTypeId: ID!
+}
+
+type CreateFacilityEquipmentPayload {
+  facilityEquipment: FacilityEquipment!
+}
+
+input CreateFacilityEquipmentRetentionInput {
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRangeInput!
+  reason: FacilityEquipmentRetentionReason!
+  description: String
+
+  """Facility equipment ID"""
+  facilityEquipmentId: ID!
+}
+
+type CreateFacilityEquipmentRetentionPayload {
+  facilityEquipmentRetention: FacilityEquipmentRetention!
+}
+
+input CreateFacilityEquipmentTypeInput {
+  name: String!
+}
+
+type CreateFacilityEquipmentTypePayload {
+  facilityEquipmentType: FacilityEquipmentType!
+}
+
+input CreateLandInput {
+  """Land human-readable code"""
+  code: String!
+  length: Float!
+  width: Float!
+  coordinates: CoordinatesInput!
+}
+
+type CreateLandPayload {
+  land: Land!
+}
+
+input CreateLanguageInput {
+  code: String!
+  name: String!
+}
+
+type CreateLanguagePayload {
+  language: Language!
+}
+
+input CreateLegalPersonInput {
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddressInput!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguageId: ID!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsentInput!
+
+  """Legal person name"""
+  name: String!
+
+  """VAT information"""
+  vat: String!
+
+  """Legal person full name"""
+  contactFullName: String!
+}
+
+type CreateLegalPersonPayload {
+  person: LegalPerson!
+}
+
+input CreateNaturalPersonInput {
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddressInput!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguageId: ID!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsentInput!
+
+  """Person first name"""
+  firstName: String!
+
+  """Person last name"""
+  lastName: String!
+
+  """Person birth day"""
+  birthDay: String!
+
+  """Country in which the person was born"""
+  birthCountryId: ID
+
+  """Location of birth"""
+  birthPlace: String
+
+  """Person gender"""
+  gender: String
+}
+
+type CreateNaturalPersonPayload {
+  person: NaturalPerson!
+}
+
+input CreatePriceListInput {
+  """Year for which the price list is"""
+  year: Int!
+
+  """Name used to describe this price list"""
+  name: String!
+
+  """Code for this price list"""
+  code: String!
+  items: [CreatePriceListItemInput!]!
+}
+
+input CreatePriceListItemInput {
+  """Service for which the price is"""
+  serviceId: ID!
+
+  """From when should this price be applied"""
+  dateFrom: DateTimeTz!
+
+  """Price with up to two decimal places"""
+  price: String!
+}
+
+type CreatePriceListPayload {
+  priceList: PriceList!
+}
+
+input CreateReservationAccommodationAdditionalServiceInput {
+  """Time during which additional service is requested"""
+  during: DateTimeRangeInput!
+
+  """Additional service identifier"""
+  serviceId: ID!
+}
+
+input CreateReservationAccommodationFacilityEquipmentInput {
+  """Time during which additional service is requested"""
+  during: DateTimeRangeInput!
+
+  """Facility equipment identifier"""
+  facilityEquipmentTypeId: ID!
+}
+
+input CreateReservationAccommodationInput {
+  """Time during which accommodation is requested"""
+  during: DateTimeRangeInput!
+
+  """Additional accommodation type category identifier"""
+  accommodationTypeCategoryId: ID!
+
+  """Facility equipment requested by the guest"""
+  additionalFacilityEquipment: [CreateReservationAccommodationFacilityEquipmentInput!]!
+
+  """Additional services requested by the guest"""
+  additionalServices: [CreateReservationAccommodationAdditionalServiceInput!]!
+
+  """Accommodation that is reserved"""
+  accommodationId: ID
+}
+
+input CreateReservationInput {
+  """Carrier that owns this reservation"""
+  carrierId: String!
+
+  """Accommodations requested by this guest"""
+  accommodations: [CreateReservationAccommodationInput!]!
+}
+
+type CreateReservationPayload {
+  """Reservation that has been created"""
+  reservation: Reservation!
+}
+
+input CreateRetentionInput {
+  """Accommodation id that is under retention"""
+  accommodationId: ID!
+
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRangeInput!
+
+  """Reason for the retention"""
+  reason: String!
+
+  """Description of the retention"""
+  description: String
+}
+
+type CreateRetentionPayload {
+  retention: Retention!
+}
+
+input CreateServiceInput {
+  code: String!
+  name: String!
+  taxId: String!
+  manuallyAddable: Boolean!
+  autoApplyConditions: AutoApplyConditionsInput
+}
+
+type CreateServicePayload {
+  service: Service!
+}
+
+input CreateTagInput {
+  """Tag name"""
+  name: String!
+}
+
+type CreateTagPayload {
+  tag: Tag!
+}
+
+input CreateTaxInput {
+  """Tax descriptive name"""
+  name: String!
+
+  """Tax value in percentage with up to two decimals"""
+  rate: Float!
+
+  """Time from which this particular tax is active"""
+  validFrom: DateTimeTz!
+
+  """Time until this particular tax is active"""
+  validTo: DateTimeTz
+}
+
+type CreateTaxPayload {
+  tax: Tax!
+}
+
+input CreateVisitorAccommodationInput {
+  """Accommodation id that is under retention"""
+  accommodationId: String!
+
+  """Time period during which visitor wants to reserve accommodation"""
+  during: DateTimeRangeInput!
+}
+
+input CreateVisitorInput {
+  """Visitor first name"""
+  firstName: String!
+
+  """Visitor first name"""
+  lastName: String!
+
+  """
+  List of accommodations with a range during which a visitor wants to reserve an accommodation
+  """
+  accommodations: [CreateVisitorAccommodationInput!]!
+}
+
+type CreateVisitorPayload {
+  visitor: Visitor!
+}
+
+type Currency {
+  """Internal identifier"""
+  id: ID!
+  isoCode: String!
+  name: String!
+}
+
+type CurrencyExchangeRate {
+  """Internal identifier"""
+  id: ID!
+  originCurrency: Currency!
+  destinationCurrency: Currency!
+  unit: Int!
+  buyingRate: Float!
+  middleRate: Float!
+  sellingRate: Float!
+}
+
+scalar Date
+
+scalar DateTime
+
+type DateTimeRange {
+  """Lower time boundary"""
+  from: String!
+
+  """Upper time boundary"""
+  until: String!
+}
+
+input DateTimeRangeInput {
+  """Lower time boundary"""
+  from: String!
+
+  """Upper time boundary"""
+  until: String!
+}
+
+scalar DateTimeTz
+
+input DeleteAccommodationInput {
+  id: ID!
+}
+
+type DeleteAccommodationPayload {
+  id: ID!
+}
+
+input DeleteAccommodationTypeCategoryInput {
+  """Accommodation type category ID"""
+  id: ID!
+}
+
+type DeleteAccommodationTypeCategoryPayload {
+  id: ID!
+}
+
+input DeleteAccommodationTypeInput {
+  """Accommodation type ID"""
+  id: ID!
+}
+
+type DeleteAccommodationTypePayload {
+  id: ID!
+}
+
+input DeleteAutoApplyConditionInput {
+  id: ID!
+}
+
+type DeleteAutoApplyConditionPayload {
+  id: ID!
+}
+
+input DeleteAutoApplyDiscountInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteAutoApplyDiscountPayload {
+  """Discount ID"""
+  id: ID!
+}
+
+input DeleteBundleItemInput {
+  id: ID!
+}
+
+type DeleteBundleItemPayload {
+  id: ID!
+}
+
+input DeleteCountryInput {
+  id: ID!
+}
+
+type DeleteCountryPayload {
+  id: ID!
+}
+
+input DeleteCurrencyInput {
+  id: ID!
+}
+
+type DeleteCurrencyPayload {
+  currencyId: ID!
+}
+
+input DeleteDiscountInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+input DeleteDiscountItemInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteDiscountItemPayload {
+  """Discount item ID"""
+  id: ID!
+}
+
+type DeleteDiscountPayload {
+  """Discount ID"""
+  id: ID!
+}
+
+input DeleteDownPaymentAllocationInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteDownPaymentAllocationPayload {
+  """Service ID"""
+  id: ID!
+}
+
+input DeleteDownPaymentInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteDownPaymentPayload {
+  """Service ID"""
+  id: ID!
+}
+
+input DeleteEmailTemplateInput {
+  id: ID!
+}
+
+type DeleteEmailTemplatePayload {
+  id: ID!
+}
+
+input DeleteFacilityEquipmentInput {
+  """Facility equipment ID"""
+  facilityEquipmentId: ID!
+}
+
+type DeleteFacilityEquipmentPayload {
+  facilityEquipmentId: ID!
+}
+
+input DeleteFacilityEquipmentRetentionInput {
+  """Facility equipment retention ID"""
+  facilityEquipmentRetentionId: ID!
+}
+
+type DeleteFacilityEquipmentRetentionPayload {
+  facilityEquipmentRetentionId: ID!
+}
+
+input DeleteFacilityEquipmentTypeInput {
+  id: ID!
+}
+
+type DeleteFacilityEquipmentTypePayload {
+  id: ID!
+}
+
+input DeleteLandInput {
+  """Land ID"""
+  id: ID!
+}
+
+type DeleteLandPayload {
+  id: ID!
+}
+
+input DeleteLanguageInput {
+  id: ID!
+}
+
+type DeleteLanguagePayload {
+  id: ID!
+}
+
+input DeleteLegalPersonInput {
+  """Legal person ID"""
+  id: ID!
+}
+
+type DeleteLegalPersonPayload {
+  """Legal person ID"""
+  id: ID!
+}
+
+input DeleteNaturalPersonInput {
+  """Natural person ID"""
+  id: ID!
+}
+
+type DeleteNaturalPersonPayload {
+  """Natural person ID"""
+  id: ID!
+}
+
+input DeletePriceListInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+input DeletePriceListItemInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeletePriceListItemPayload {
+  """Service ID"""
+  id: ID!
+}
+
+type DeletePriceListPayload {
+  """Service ID"""
+  id: ID!
+}
+
+input DeleteReservationAccommodationAdditionalServiceInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteReservationAccommodationAdditionalServicePayload {
+  """Internal identifier"""
+  id: ID!
+}
+
+input DeleteReservationAccommodationFacilityEquipmentInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteReservationAccommodationFacilityEquipmentPayload {
+  """Internal identifier"""
+  id: ID!
+}
+
+input DeleteReservationAccommodationInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DeleteReservationAccommodationPayload {
+  """Internal identifier"""
+  id: ID!
+}
+
+input DeleteRetentionInput {
+  id: ID!
+}
+
+type DeleteRetentionPayload {
+  id: ID!
+}
+
+input DeleteServiceInput {
+  """Service ID"""
+  id: ID!
+}
+
+type DeleteServicePayload {
+  """Service ID"""
+  id: ID!
+}
+
+input DeleteTagInput {
+  """Tag unique code"""
+  id: ID!
+}
+
+type DeleteTagPayload {
+  """Tag unique code"""
+  id: ID!
+}
+
+input DeleteTaxInput {
+  """Tax ID"""
+  id: ID!
+}
+
+type DeleteTaxPayload {
+  """Tax ID"""
+  id: ID!
+}
+
+input DeleteUserInput {
+  id: ID!
+}
+
+type DeleteUserPayload {
+  id: ID!
+}
+
+input DeleteVisitorAccommodationInput {
+  """Internal identifier"""
+  visitorAccommodationId: ID!
+}
+
+type DeleteVisitorAccommodationPayload {
+  """Internal identifier"""
+  visitorAccommodationId: ID!
+}
+
+input DeleteVisitorInput {
+  """Internal identifier"""
+  visitorId: ID!
+}
+
+type DeleteVisitorPayload {
+  """Internal identifier"""
+  visitorId: ID!
+}
+
+type Discount implements DiscountInterface {
+  """Internal identifier"""
+  id: ID!
+
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  items: [DiscountItem!]!
+
+  """Whether a discount is archived or not"""
+  archived: Boolean!
+}
+
+interface DiscountInterface {
+  """Internal identifier"""
+  id: ID!
+
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  items: [DiscountItem!]!
+
+  """Whether a discount is archived or not"""
+  archived: Boolean!
+}
+
+type DiscountItem {
+  """Internal identifier"""
+  id: ID!
+
+  """Service for which the price is"""
+  service: Service!
+
+  """Amount with up to two decimal places"""
+  discountAmount: Float!
+}
+
+type DownPayment {
+  """Internal identifier"""
+  id: ID!
+
+  """Amount of the down payment"""
+  amount: Float!
+  currency: Currency!
+  person: Person!
+  allocations: [DownPaymentAllocation!]!
+  createdAt: DateTimeTz!
+}
+
+type DownPaymentAllocation {
+  """Internal identifier"""
+  id: ID!
+  amount: Float!
+  downPayment: DownPayment!
+  reservation: Reservation!
+}
+
+input DuplicateBundleInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type DuplicateBundlePayload {
+  bundle: Bundle!
+}
+
+input DuplicatePriceListInput {
+  """Internal identifier that will be duplicated"""
+  id: ID!
+
+  """Year for which the price list is"""
+  year: Int!
+}
+
+type DuplicatePriceListPayload {
+  priceList: PriceList!
+}
+
+type Email {
+  """Email address"""
+  email: String!
+
+  """Name of the person"""
+  name: String
+}
+
+type EmailTemplate {
+  id: ID!
+  content: String!
+  language: Language!
+  name: String!
+}
+
+"""Facility Equipment Type"""
+type FacilityEquipment {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+  facilityEquipmentType: FacilityEquipmentType!
+  retentions: [FacilityEquipmentRetention]
+}
+
+"""Facility Equipment Type"""
+type FacilityEquipmentRetention {
+  """Internal identifier"""
+  id: ID!
+
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRange!
+  reason: FacilityEquipmentRetentionReason!
+  description: String
+  facilityEquipment: FacilityEquipment!
+}
+
+"""Facility Equipment available retention reasons"""
+enum FacilityEquipmentRetentionReason {
+  RESERVED
+  OTHER
+}
+
+"""Facility Equipment Type"""
+type FacilityEquipmentType {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+}
+
+type FacilityEquipmentTypeBundleItem implements BundleItem {
+  """Internal identifier"""
+  id: ID!
+  price: Float!
+  facilityEquipmentType: FacilityEquipmentType!
+}
+
+input FacilityEquipmentTypeBundleItemInput {
+  price: Float!
+  facilityEquipmentTypeId: ID
+  bundleId: ID
+}
+
+type FillEmailTemplatePayload {
+  template: EmailTemplate!
+}
+
+input FillTemplateInput {
+  templateId: ID!
+  reservationId: ID!
+}
+
+type GuestAgeCondition implements AutoApplyCondition {
+  """Internal identifier"""
+  id: ID!
+  subject: ConditionSubject!
+  minAge: Int!
+  maxAge: Int!
+}
+
+input GuestAgeConditionInput {
+  minAge: Int!
+  maxAge: Int!
+}
+
+input InviteUserInput {
+  email: String!
+  roles: [UserRole!]!
+}
+
+type InviteUserPayload {
+  user: User!
+}
+
+type Land {
+  """Internal identifier"""
+  id: ID!
+
+  """Land human-readable code"""
+  code: String!
+  length: Float!
+  width: Float!
+  coordinates: Coordinates!
+  accommodations: [Accommodation!]!
+}
+
+type Language {
+  """Internal identifier"""
+  id: ID!
+  code: String!
+  name: String!
+}
+
+type LegalPerson implements Person {
+  """Internal identifier"""
+  id: ID!
+
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddress!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguage: Language!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsent!
+
+  """When did that person enter the database"""
+  createdAt: DateTimeTz!
+
+  """Time when the person was last changed"""
+  updatedAt: DateTimeTz!
+
+  """Legal person name"""
+  name: String!
+
+  """VAT information"""
+  vat: String!
+
+  """Legal person full name"""
+  contactFullName: String!
+}
+
+input ManuallyAssignAccommodationToReservationAccommodationInput {
+  """Reservation accommodation identifier"""
+  id: ID!
+
+  """Accommodation identifier"""
+  accommodationId: ID!
+}
+
+type ManuallyAssignAccommodationToReservationAccommodationPayload {
+  """Reservation accommodation"""
+  accommodation: ReservationAccommodation!
+}
+
+input ManuallyAssignReservationAccommodationFacilityEquipmentInput {
+  """Reservation facility equipment identifier"""
+  id: ID!
+
+  """Facility equipment identifier"""
+  facilityEquipmentId: ID!
+}
+
+type ManuallyAssignReservationAccommodationFacilityEquipmentPayload {
+  """Reservation facility equipment"""
+  facilityEquipment: ReservationAccommodationFacilityEquipment!
+}
+
+type Message {
+  """Internal identifier"""
+  id: ID!
+  thread: Thread!
+  messageId: String!
+  replyToMessageId: String
+  replyToMessage: Message
+  references: String
+  subject: String!
+  textStripped: String!
+  htmlRaw: String!
+  sender: Email!
+  recipient: Email!
+  isIncoming: Boolean!
+  createdAt: DateTime!
+  attachments: [ReservationFile!]!
+}
+
+input ModifyReservationAccommodationAdditionalServiceDuringInput {
+  """Reservation accommodation additional service identifier"""
+  id: ID!
+
+  """Modified time during which additional service is requested"""
+  during: DateTimeRangeInput!
+}
+
+type ModifyReservationAccommodationAdditionalServiceDuringPayload {
+  """Updated additional service"""
+  additionalService: ReservationAccommodationAdditionalService!
+}
+
+input ModifyReservationAccommodationDuringInput {
+  """Reservation accommodation identifier"""
+  id: ID!
+
+  """Modified time during which accommodation is requested"""
+  during: DateTimeRangeInput!
+}
+
+type ModifyReservationAccommodationDuringPayload {
+  """Updated accommodation"""
+  accommodation: ReservationAccommodation!
+}
+
+input ModifyReservationAccommodationFacilityEquipmentDuringInput {
+  """Reservation facility equipment identifier"""
+  id: ID!
+
+  """Time during which additional service is requested"""
+  during: DateTimeRangeInput!
+}
+
+type ModifyReservationAccommodationFacilityEquipmentDuringPayload {
+  """Updated added facility equipment"""
+  facilityEquipment: ReservationAccommodationFacilityEquipment!
+}
+
+type Mutation {
+  createAccommodation(input: CreateAccommodationInput!): CreateAccommodationPayload!
+  updateAccommodation(input: UpdateAccommodationInput!): UpdateAccommodationPayload!
+  deleteAccommodation(input: DeleteAccommodationInput!): DeleteAccommodationPayload!
+  createAccommodationTypeCategory(input: CreateAccommodationTypeCategoryInput!): CreateAccommodationTypeCategoryPayload!
+  updateAccommodationTypeCategory(input: UpdateAccommodationTypeCategoryInput!): UpdateAccommodationTypeCategoryPayload!
+  deleteAccommodationTypeCategory(input: DeleteAccommodationTypeCategoryInput!): DeleteAccommodationTypeCategoryPayload!
+  createAccommodationType(input: CreateAccommodationTypeInput!): CreateAccommodationTypePayload!
+  updateAccommodationType(input: UpdateAccommodationTypeInput!): UpdateAccommodationTypePayload!
+  deleteAccommodationType(input: DeleteAccommodationTypeInput!): DeleteAccommodationTypePayload!
+  createLand(input: CreateLandInput!): CreateLandPayload!
+  updateLand(input: UpdateLandInput!): UpdateLandPayload!
+  deleteLand(input: DeleteLandInput!): DeleteLandPayload!
+  createCountry(input: CreateCountryInput!): CreateCountryPayload!
+  updateCountry(input: UpdateCountryInput!): UpdateCountryPayload!
+  deleteCountry(input: DeleteCountryInput!): DeleteCountryPayload!
+  createLanguage(input: CreateLanguageInput!): CreateLanguagePayload!
+  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload!
+  deleteLanguage(input: DeleteLanguageInput!): DeleteLanguagePayload!
+  inviteUser(input: InviteUserInput!): InviteUserPayload!
+  updateUser(input: UpdateUserInput!): UpdateUserPayload!
+  deleteUser(input: DeleteUserInput!): DeleteUserPayload!
+  login(input: UserLoginInput!): UserLoginPayload!
+  setPassword(input: UserSetPasswordInput!): UserSetPasswordPayload!
+  deleteLegalPerson(input: DeleteLegalPersonInput!): DeleteLegalPersonPayload!
+  deleteNaturalPerson(input: DeleteNaturalPersonInput!): DeleteNaturalPersonPayload!
+  createLegalPerson(input: CreateLegalPersonInput!): CreateLegalPersonPayload!
+  createNaturalPerson(input: CreateNaturalPersonInput!): CreateNaturalPersonPayload!
+  updateLegalPerson(input: UpdateLegalPersonInput!): UpdateLegalPersonPayload!
+  updateNaturalPerson(input: UpdateNaturalPersonInput!): UpdateNaturalPersonPayload!
+  createTag(input: CreateTagInput!): CreateTagPayload!
+  updateTag(input: UpdateTagInput!): UpdateTagPayload!
+  deleteTag(input: DeleteTagInput!): DeleteTagPayload!
+  createRetention(input: CreateRetentionInput!): CreateRetentionPayload!
+  updateRetention(input: UpdateRetentionInput!): UpdateRetentionPayload!
+  deleteRetention(input: DeleteRetentionInput!): DeleteRetentionPayload!
+  createFacilityEquipmentType(input: CreateFacilityEquipmentTypeInput!): CreateFacilityEquipmentTypePayload!
+  updateFacilityEquipmentType(input: UpdateFacilityEquipmentTypeInput!): UpdateFacilityEquipmentTypePayload!
+  deleteFacilityEquipmentType(input: DeleteFacilityEquipmentTypeInput!): DeleteFacilityEquipmentTypePayload!
+  createFacilityEquipment(input: CreateFacilityEquipmentInput!): CreateFacilityEquipmentPayload!
+  updateFacilityEquipment(input: UpdateFacilityEquipmentInput!): UpdateFacilityEquipmentPayload!
+  deleteFacilityEquipment(input: DeleteFacilityEquipmentInput!): DeleteFacilityEquipmentPayload!
+  createFacilityEquipmentRetention(input: CreateFacilityEquipmentRetentionInput!): CreateFacilityEquipmentRetentionPayload!
+  updateFacilityEquipmentRetention(input: UpdateFacilityEquipmentRetentionInput!): UpdateFacilityEquipmentRetentionPayload!
+  deleteFacilityEquipmentRetention(input: DeleteFacilityEquipmentRetentionInput!): DeleteFacilityEquipmentRetentionPayload!
+  createService(input: CreateServiceInput!): CreateServicePayload!
+  updateService(input: UpdateServiceInput!): UpdateServicePayload!
+  deleteService(input: DeleteServiceInput!): DeleteServicePayload!
+  archiveService(input: ArchiveServiceInput!): ArchiveServicePayload!
+  restoreService(input: RestoreServiceInput!): RestoreServicePayload!
+  addAutoApplyConditions(input: AddAutoApplyConditionsInput!): AddAutoApplyConditionsPayload!
+  deleteAutoApplyCondition(input: DeleteAutoApplyConditionInput!): DeleteAutoApplyConditionPayload!
+  createTax(input: CreateTaxInput!): CreateTaxPayload!
+  updateTax(input: UpdateTaxInput!): UpdateTaxPayload!
+  deleteTax(input: DeleteTaxInput!): DeleteTaxPayload!
+  createPriceList(input: CreatePriceListInput!): CreatePriceListPayload!
+  updatePriceList(input: UpdatePriceListInput!): UpdatePriceListPayload!
+  deletePriceList(input: DeletePriceListInput!): DeletePriceListPayload!
+  addPriceListItem(input: AddPriceListItemInput!): AddPriceListItemPayload!
+  updatePriceListItem(input: UpdatePriceListItemInput!): UpdatePriceListItemPayload!
+  deletePriceListItem(input: DeletePriceListItemInput!): DeletePriceListItemPayload!
+  publishPriceList(input: PublishPriceListInput!): PublishPriceListPayload!
+  unpublishPriceList(input: UnpublishPriceListInput!): UnpublishPriceListPayload!
+  duplicatePriceList(input: DuplicatePriceListInput!): DuplicatePriceListPayload!
+  createCurrency(input: CreateCurrencyInput!): CreateCurrencyPayload!
+  updateCurrency(input: UpdateCurrencyInput!): UpdateCurrencyPayload!
+  deleteCurrency(input: DeleteCurrencyInput!): DeleteCurrencyPayload!
+  createVisitor(input: CreateVisitorInput!): CreateVisitorPayload!
+  updateVisitor(input: UpdateVisitorInput!): UpdateVisitorPayload!
+  deleteVisitor(input: DeleteVisitorInput!): DeleteVisitorPayload!
+  addVisitorAccommodation(input: AddVisitorAccommodationInput!): AddVisitorAccommodationPayload!
+  deleteVisitorAccommodation(input: DeleteVisitorAccommodationInput!): DeleteVisitorAccommodationPayload!
+  createReservation(input: CreateReservationInput!): CreateReservationPayload!
+  updateReservation(input: UpdateReservationInput!): UpdateReservationPayload!
+  takeReservation(input: TakeReservationInput!): TakeReservationPayload!
+  assignReservationBooker(input: AssignReservationBookerInput!): AssignReservationBookerPayload!
+  removeReservationBooker(input: RemoveReservationBookerInput!): RemoveReservationBookerPayload!
+  addReservationAccommodation(input: AddReservationAccommodationInput!): AddReservationAccommodationPayload!
+  updateReservationAccommodation(input: UpdateReservationAccommodationInput!): UpdateReservationAccommodationPayload!
+  deleteReservationAccommodation(input: DeleteReservationAccommodationInput!): DeleteReservationAccommodationPayload!
+  addReservationAccommodationFacilityEquipment(input: AddReservationAccommodationFacilityEquipmentInput!): AddReservationAccommodationFacilityEquipmentPayload!
+  deleteReservationAccommodationFacilityEquipment(input: DeleteReservationAccommodationFacilityEquipmentInput!): DeleteReservationAccommodationFacilityEquipmentPayload!
+  addReservationAccommodationAdditionalService(input: AddReservationAccommodationAdditionalServiceInput!): AddReservationAccommodationAdditionalServicePayload!
+  deleteReservationAccommodationAdditionalService(input: DeleteReservationAccommodationAdditionalServiceInput!): DeleteReservationAccommodationAdditionalServicePayload!
+  addReservationFile(input: AddReservationFileInput!): AddReservationFilePayload!
+  addDiscountItem(input: AddDiscountItemInput!): AddDiscountItemPayload!
+  updateDiscountItem(input: UpdateDiscountItemInput!): UpdateDiscountItemPayload!
+  deleteDiscountItem(input: DeleteDiscountItemInput!): DeleteDiscountItemPayload!
+  createDiscount(input: CreateDiscountInput!): CreateDiscountPayload!
+  updateDiscount(input: UpdateDiscountInput!): UpdateDiscountPayload!
+  deleteDiscount(input: DeleteDiscountInput!): DeleteDiscountPayload!
+  sendMessage(input: SendMessageInput!): SendMessagePayload!
+  archiveDiscount(input: ArchiveDiscountInput!): ArchiveDiscountPayload!
+  RestoreDiscount(input: RestoreDiscountInput!): RestoreDiscountPayload!
+  createAutoApplyDiscount(input: CreateAutoApplyDiscountInput!): CreateAutoApplyDiscountPayload!
+  updateAutoApplyDiscount(input: UpdateAutoApplyDiscountInput!): UpdateAutoApplyDiscountPayload!
+  deleteAutoApplyDiscount(input: DeleteAutoApplyDiscountInput!): DeleteAutoApplyDiscountPayload!
+  createEmailTemplate(input: CreateEmailTemplateInput!): CreateEmailTemplatePayload!
+  updateEmailTemplate(input: UpdateEmailTemplateInput!): UpdateEmailTemplatePayload!
+  deleteEmailTemplate(input: DeleteEmailTemplateInput!): DeleteEmailTemplatePayload!
+  fillEmailTemplate(input: FillTemplateInput!): FillEmailTemplatePayload!
+  createBundle(input: CreateBundleInput!): CreateBundlePayload!
+  updateBundle(input: UpdateBundleInput!): UpdateBundlePayload!
+  archiveBundle(input: ArchiveBundleInput!): ArchiveBundlePayload!
+  restoreBundle(input: RestoreBundleInput!): RestoreBundlePayload!
+  duplicateBundle(input: DuplicateBundleInput!): DuplicateBundlePayload!
+  addBundleItem(input: AddBundleItemInput!): AddBundleItemPayload!
+  updateBundleItem(input: UpdateBundleItemInput!): UpdateBundleItemPayload!
+  deleteBundleItem(input: DeleteBundleItemInput!): DeleteBundleItemPayload!
+  createDownPayment(input: CreateDownPaymentInput!): CreateDownPaymentPayload!
+  updateDownPayment(input: UpdateDownPaymentInput!): UpdateDownPaymentPayload!
+  deleteDownPayment(input: DeleteDownPaymentInput!): DeleteDownPaymentPayload!
+  createDownPaymentAllocation(input: CreateDownPaymentAllocationInput!): CreateDownPaymentAllocationPayload!
+  updateDownPaymentAllocation(input: UpdateDownPaymentAllocationInput!): UpdateDownPaymentAllocationPayload!
+  deleteDownPaymentAllocation(input: DeleteDownPaymentAllocationInput!): DeleteDownPaymentAllocationPayload!
+  manuallyAssignAccommodation(input: ManuallyAssignAccommodationToReservationAccommodationInput!): ManuallyAssignAccommodationToReservationAccommodationPayload!
+  removeAssignedAccommodation(input: RemoveAssignedAccommodationToReservationAccommodationInput!): RemoveAssignedAccommodationToReservationAccommodationPayload!
+  manuallyAssignReservationAccommodationFacilityEquipment(input: ManuallyAssignReservationAccommodationFacilityEquipmentInput!): ManuallyAssignReservationAccommodationFacilityEquipmentPayload!
+  removeAssignedReservationAccommodationFacilityEquipment(input: RemoveAssignedReservationAccommodationFacilityEquipmentInput!): RemoveAssignedReservationAccommodationFacilityEquipmentPayload!
+  addReservationDiscount(input: AddReservationDiscountInput!): AddReservationDiscountPayload!
+  removeReservationDiscount(input: RemoveReservationDiscountInput!): RemoveReservationDiscountPayload!
+  modifyReservationAccommodationDuring(input: ModifyReservationAccommodationDuringInput!): ModifyReservationAccommodationDuringPayload!
+  modifyReservationAccommodationAdditionalServiceDuring(input: ModifyReservationAccommodationAdditionalServiceDuringInput!): ModifyReservationAccommodationAdditionalServiceDuringPayload!
+  modifyReservationAccommodationFacilityEquipmentDuring(input: ModifyReservationAccommodationFacilityEquipmentDuringInput!): ModifyReservationAccommodationFacilityEquipmentDuringPayload!
+}
+
+type NaturalPerson implements Person {
+  """Internal identifier"""
+  id: ID!
+
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddress!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguage: Language!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsent!
+
+  """When did that person enter the database"""
+  createdAt: DateTimeTz!
+
+  """Time when the person was last changed"""
+  updatedAt: DateTimeTz!
+
+  """Person first name"""
+  firstName: String!
+
+  """Person last name"""
+  lastName: String!
+
+  """Person birth day"""
+  birthDay: DateTimeTz!
+
+  """Country in which the person was born"""
+  birthCountry: Country
+
+  """Location of birth"""
+  birthPlace: String
+
+  """Person gender"""
+  gender: String
+}
+
+type NewsletterConsent {
+  """Whether the newsletter consent is given or not"""
+  accepted: Boolean!
+
+  """Time when the consent was first recorded"""
+  createdAt: DateTimeTz!
+
+  """Last update of the consent"""
+  updatedAt: DateTimeTz!
+}
+
+input NewsletterConsentInput {
+  """Whether the newsletter consent is given or not"""
+  accepted: Boolean!
+}
+
+input NumericFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+interface Person {
+  """Internal identifier"""
+  id: ID!
+
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddress!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguage: Language!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsent!
+
+  """When did that person enter the database"""
+  createdAt: DateTimeTz!
+
+  """Time when the person was last changed"""
+  updatedAt: DateTimeTz!
+}
+
+type PersonAddress {
+  """Street name and house number"""
+  street: String!
+
+  """City postal code"""
+  postalCode: String!
+
+  """City name"""
+  city: String!
+
+  """Country in which the address is located"""
+  country: Country!
+}
+
+input PersonAddressInput {
+  """Street name and house number"""
+  street: String!
+
+  """City postal code"""
+  postalCode: String!
+
+  """City name"""
+  city: String!
+
+  """Country in which the address is located"""
+  countryId: ID!
+}
+
+type PriceList {
+  """Internal identifier"""
+  id: ID!
+
+  """Year for which the price list is"""
+  year: Int!
+
+  """Name used to describe this price list"""
+  name: String!
+
+  """Code for this price list"""
+  code: String!
+
+  """Current price list status"""
+  status: PriceListStatus!
+  items: [PriceListItem!]!
+}
+
+type PriceListItem {
+  """Internal identifier"""
+  id: ID!
+
+  """Service for which the price is"""
+  service: Service!
+
+  """From when should this price be applied"""
+  dateFrom: DateTimeTz!
+
+  """Price with up to two decimal places"""
+  price: String!
+}
+
+enum PriceListStatus {
+  UNPUBLISHED
+  PUBLISHED
+}
+
+input PublishPriceListInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type PublishPriceListPayload {
+  priceList: PriceList!
+}
+
+type Query {
+  accommodation(id: ID!): Accommodation
+  accommodations(filter: [AccommodationFilter!]): [Accommodation!]!
+  accommodationType(id: ID!): AccommodationType
+  accommodationTypes: [AccommodationType!]!
+  land(id: ID!): Land
+  lands: [Land!]!
+  accommodationTypeCategory(id: ID!): AccommodationTypeCategory
+  accommodationTypeCategories: [AccommodationTypeCategory!]!
+  country(id: ID!): Country
+  countries: [Country!]!
+  language(id: ID!): Language
+  languages: [Language!]!
+  user(id: ID!): User
+  person(id: ID!): Person
+  people: [Person!]!
+  users: [User!]!
+  tag(id: ID!): Tag!
+  tags: [Tag!]!
+  retention(id: ID!): Retention
+  retentions: [Retention!]!
+  facilityEquipmentType(id: ID!): FacilityEquipmentType
+  facilityEquipmentTypes: [FacilityEquipmentType!]!
+  facilityEquipment(id: ID!): FacilityEquipment
+  facilityEquipmentAll: [FacilityEquipment!]!
+  facilityEquipmentRetention(id: ID!): FacilityEquipmentRetention
+  facilityEquipmentRetentions: [FacilityEquipmentRetention!]!
+  service(id: ID!): Service
+  services(after: String, first: Int, filter: [ServiceFilter!], sort: ServiceSort): ServiceConnection
+  tax(id: ID!): Tax
+  taxes(after: String, first: Int, filter: [TaxFilter!], sort: TaxSort): TaxConnection
+  priceList(id: ID!): PriceList
+  priceLists: [PriceList!]!
+  currency(id: ID!): Currency
+  currencies: [Currency!]!
+  currencyExchangeRate(id: ID!): CurrencyExchangeRate
+  currencyExchangeRates: [CurrencyExchangeRate!]!
+  visitor(id: ID!): Visitor
+  visitors: [Visitor!]!
+  reservation(id: ID!): Reservation
+  reservations: [Reservation!]!
+  reservationAccommodation(id: ID!): ReservationAccommodation
+  discount(id: ID!): DiscountInterface
+  discounts: [DiscountInterface!]!
+  thread(id: ID!): Thread
+  threads: [Thread!]!
+  emailTemplate(id: ID!): EmailTemplate!
+  emailTemplates: [EmailTemplate!]!
+  bundle(id: ID!): Bundle
+  bundles: [Bundle!]!
+  downPayment(id: ID!): DownPayment!
+  downPayments: [DownPayment!]!
+  downPaymentAllocation(id: ID!): DownPaymentAllocation!
+  downPaymentAllocations: [DownPaymentAllocation!]!
+}
+
+input RemoveAssignedAccommodationToReservationAccommodationInput {
+  """Reservation accommodation identifier"""
+  id: ID!
+}
+
+type RemoveAssignedAccommodationToReservationAccommodationPayload {
+  """Reservation accommodation"""
+  accommodation: ReservationAccommodation!
+}
+
+input RemoveAssignedReservationAccommodationFacilityEquipmentInput {
+  """Reservation facility equipment identifier"""
+  id: ID!
+}
+
+type RemoveAssignedReservationAccommodationFacilityEquipmentPayload {
+  """Reservation facility equipment"""
+  facilityEquipment: ReservationAccommodationFacilityEquipment!
+}
+
+input RemoveReservationBookerInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type RemoveReservationBookerPayload {
+  """Reservation for which the booker is removed"""
+  reservation: Reservation!
+}
+
+input RemoveReservationDiscountInput {
+  """Reservation id"""
+  reservationId: ID!
+
+  """Discount id"""
+  discountId: ID!
+}
+
+type RemoveReservationDiscountPayload {
+  """Reservation from which a discount is assigned"""
+  reservation: Reservation!
+}
+
+type Reservation {
+  """Internal identifier"""
+  id: ID!
+
+  """Carrier that owns this reservation"""
+  carrier: Person!
+
+  """Current reservation status"""
+  status: ReservationStatus!
+
+  """Reservation creation date and time"""
+  createdAt: DateTimeTz!
+
+  """Reservation ordinal number"""
+  ordinal: String!
+
+  """Booker currently assigned to this reservation"""
+  booker: User
+
+  """Accommodations requested by this guest"""
+  accommodations: [ReservationAccommodation!]!
+
+  """Files uploaded to this reservation"""
+  files: [ReservationFile!]!
+
+  """Discounts assigned to this reservation"""
+  discounts: [Discount!]!
+
+  """Threads associated with this reservation"""
+  threads: [Thread!]!
+  downPaymentAllocations: [DownPaymentAllocation!]!
+}
+
+type ReservationAccommodation {
+  """Internal identifier"""
+  id: ID!
+
+  """Date range during which the additional service is requested"""
+  during: DateTimeRange!
+  accommodationTypeCategory: AccommodationTypeCategory!
+
+  """Additional services requested by the guest"""
+  additionalServices: [ReservationAccommodationAdditionalService!]!
+
+  """Facility equipment requested by the guest"""
+  additionalFacilityEquipment: [ReservationAccommodationFacilityEquipment!]!
+
+  """Currently assigned retention"""
+  retention: Retention
+
+  """Currently assigned accommodation"""
+  accommodation: Accommodation
+}
+
+type ReservationAccommodationAdditionalService {
+  """Internal identifier"""
+  id: ID!
+
+  """Date range during which the additional service is requested"""
+  during: DateTimeRange!
+  service: Service!
+}
+
+type ReservationAccommodationFacilityEquipment {
+  """Internal identifier"""
+  id: ID!
+
+  """Date range during which the additional service is requested"""
+  during: DateTimeRange!
+  facilityEquipmentType: FacilityEquipmentType!
+  retention: FacilityEquipmentRetention
+}
+
+type ReservationFile {
+  """Internal identifier"""
+  id: ID!
+
+  """Original file name that was uploaded"""
+  originalName: String!
+
+  """Time when the file was created/uploaded"""
+  createdAt: DateTimeTz!
+}
+
+enum ReservationStatus {
+  UNPROCESSED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+input RestoreBundleInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type RestoreBundlePayload {
+  bundle: Bundle!
+}
+
+input RestoreDiscountInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type RestoreDiscountPayload {
+  discount: Discount!
+}
+
+input RestoreServiceInput {
+  """Service ID"""
+  id: ID!
+}
+
+type RestoreServicePayload {
+  service: Service!
+}
+
+type Retention {
+  """Internal identifier"""
+  id: ID!
+
+  """Accommodation that is under retention"""
+  accommodation: Accommodation!
+
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRange!
+
+  """Reason for the retention"""
+  reason: String!
+
+  """Description of the retention"""
+  description: String
+}
+
+input SendMessageInput {
+  threadId: String!
+
+  """Text of the message"""
+  text: String!
+
+  """Message ID to which you reply"""
+  replyToId: String
+
+  """IDs of reservations files to attach"""
+  attachmentIds: [ID!]!
+}
+
+type SendMessagePayload {
+  message: Message!
+}
+
+type Service {
+  """Internal identifier"""
+  id: ID!
+
+  """Service short code"""
+  code: String!
+
+  """Service name"""
+  name: String!
+
+  """Service tax"""
+  tax: Tax!
+
+  """Whether a service can be manually added"""
+  manuallyAddable: Boolean!
+
+  """Whether a service is archived or not"""
+  archived: Boolean!
+  autoApplyConditions: [AutoApplyCondition!]!
+}
+
+"""A connection to a list of items."""
+type ServiceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Information to aid in pagination."""
+  edges: [ServiceEdge]
+}
+
+"""An edge in a connection."""
+type ServiceEdge {
+  """The item at the end of the edge."""
+  node: Service
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input ServiceFilter {
+  code: StringFilter
+  name: StringFilter
+  archived: BooleanFilter
+  manuallyAddable: BooleanFilter
+}
+
+input ServiceSort {
+  code: SortOrder
+  name: SortOrder
+  archived: SortOrder
+  manuallyAddable: SortOrder
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+input StringFilter {
+  equals: String
+  contains: String
+}
+
+type Tag {
+  """Tag unique code"""
+  id: ID!
+
+  """Tag name"""
+  name: String!
+}
+
+input TakeReservationInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type TakeReservationPayload {
+  """Reservation that current booker is taking over"""
+  reservation: Reservation!
+}
+
+type Tax {
+  """Internal identifier"""
+  id: ID!
+
+  """Tax descriptive name"""
+  name: String!
+
+  """Tax value in percentage"""
+  rate: Float!
+
+  """Time from which this particular tax is active"""
+  validFrom: Date!
+
+  """Time until this particular tax is active"""
+  validTo: Date
+}
+
+"""A connection to a list of items."""
+type TaxConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Information to aid in pagination."""
+  edges: [TaxEdge]
+}
+
+"""An edge in a connection."""
+type TaxEdge {
+  """The item at the end of the edge."""
+  node: Tax
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input TaxFilter {
+  name: StringFilter
+  rate: NumericFilter
+}
+
+input TaxSort {
+  name: SortOrder
+  rate: SortOrder
+}
+
+type Thread {
+  """Internal identifier"""
+  id: ID!
+  messages: [Message]!
+  createdAt: DateTime!
+}
+
+input ToManyRelationshipFilter {
+  contains: ID
+}
+
+input ToOneRelationshipFilter {
+  equals: ID
+}
+
+input UnpublishPriceListInput {
+  """Internal identifier"""
+  id: ID!
+}
+
+type UnpublishPriceListPayload {
+  priceList: PriceList!
+}
+
+input UpdateAccommodationInput {
+  id: ID!
+  code: String!
+  guestCapacity: Int!
+  guestAdditionalCapacity: Int
+
+  """Accommodation type category ID"""
+  accommodationTypeCategoryId: ID!
+
+  """Land ID"""
+  landId: ID!
+
+  """Tag codes used for this accommodation"""
+  tags: [String!]!
+}
+
+type UpdateAccommodationPayload {
+  accommodation: Accommodation!
+}
+
+input UpdateAccommodationTypeCategoryInput {
+  """Accommodation type category ID"""
+  id: ID!
+  name: String!
+  quality: Int!
+
+  """Accommodation type ID"""
+  accommodationTypeId: ID!
+}
+
+type UpdateAccommodationTypeCategoryPayload {
+  accommodationTypeCategory: AccommodationTypeCategory!
+}
+
+input UpdateAccommodationTypeInput {
+  """Accommodation type ID"""
+  id: ID!
+  name: String!
+  hasDimensions: Boolean!
+}
+
+type UpdateAccommodationTypePayload {
+  accommodationType: AccommodationType!
+}
+
+input UpdateAutoApplyDiscountInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+  reservationRange: DateTimeRangeInput
+  autoApplyRange: DateTimeRangeInput!
+}
+
+type UpdateAutoApplyDiscountPayload {
+  discount: AutoApplyDiscount!
+}
+
+input UpdateBundleInput {
+  """Internal identifier"""
+  id: ID!
+  name: String!
+  note: String
+  during: DateTimeRangeInput!
+}
+
+input UpdateBundleItemInput {
+  id: ID!
+  price: Float!
+}
+
+type UpdateBundleItemPayload {
+  item: BundleItem!
+}
+
+type UpdateBundlePayload {
+  bundle: Bundle!
+}
+
+input UpdateCountryInput {
+  id: ID!
+  code: String!
+  name: String!
+}
+
+type UpdateCountryPayload {
+  country: Country!
+}
+
+input UpdateCurrencyInput {
+  id: ID!
+  name: String!
+  isoCode: String!
+}
+
+type UpdateCurrencyPayload {
+  currency: Currency!
+}
+
+input UpdateDiscountInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Name for this discount"""
+  name: String!
+
+  """Note for this discount"""
+  note: String
+}
+
+input UpdateDiscountItemInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Service for which the price is"""
+  serviceId: ID!
+
+  """Amount with up to two decimal places"""
+  discountAmount: Float!
+}
+
+type UpdateDiscountItemPayload {
+  discountItem: DiscountItem!
+}
+
+type UpdateDiscountPayload {
+  discount: Discount!
+}
+
+input UpdateDownPaymentAllocationInput {
+  """Internal identifier"""
+  id: ID!
+  amount: Float!
+}
+
+type UpdateDownPaymentAllocationPayload {
+  downPaymentAllocation: DownPaymentAllocation!
+}
+
+input UpdateDownPaymentInput {
+  """Internal identifier"""
+  id: ID!
+  amount: Float!
+  currencyId: ID!
+
+  """ID of the person"""
+  personId: ID!
+}
+
+type UpdateDownPaymentPayload {
+  downPayment: DownPayment!
+}
+
+input UpdateEmailTemplateInput {
+  id: ID!
+  content: String!
+  languageId: String!
+  name: String!
+}
+
+type UpdateEmailTemplatePayload {
+  template: EmailTemplate!
+}
+
+input UpdateFacilityEquipmentInput {
+  """Facility equipment ID"""
+  facilityEquipmentId: ID!
+  name: String!
+
+  """Facility equipment type ID"""
+  facilityEquipmentTypeId: ID!
+}
+
+type UpdateFacilityEquipmentPayload {
+  facilityEquipment: FacilityEquipment!
+}
+
+input UpdateFacilityEquipmentRetentionInput {
+  facilityEquipmentRetentionId: ID!
+
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRangeInput!
+  reason: FacilityEquipmentRetentionReason!
+  description: String
+
+  """Facility equipment ID"""
+  facilityEquipmentId: ID!
+}
+
+type UpdateFacilityEquipmentRetentionPayload {
+  facilityEquipmentRetention: FacilityEquipmentRetention!
+}
+
+input UpdateFacilityEquipmentTypeInput {
+  id: ID!
+  name: String!
+}
+
+type UpdateFacilityEquipmentTypePayload {
+  facilityEquipmentType: FacilityEquipmentType!
+}
+
+input UpdateLandInput {
+  id: ID!
+
+  """Land human-readable code"""
+  code: String!
+  length: Float!
+  width: Float!
+  coordinates: CoordinatesInput!
+}
+
+type UpdateLandPayload {
+  land: Land!
+}
+
+input UpdateLanguageInput {
+  id: ID!
+  code: String!
+  name: String!
+}
+
+type UpdateLanguagePayload {
+  language: Language!
+}
+
+input UpdateLegalPersonInput {
+  """Legal person ID"""
+  id: ID!
+
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddressInput!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguageId: ID!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsentInput!
+
+  """Legal person name"""
+  name: String!
+
+  """VAT information"""
+  vat: String!
+
+  """Legal person full name"""
+  contactFullName: String!
+}
+
+type UpdateLegalPersonPayload {
+  person: LegalPerson!
+}
+
+input UpdateNaturalPersonInput {
+  """Legal person ID"""
+  id: ID!
+
+  """Person email"""
+  email: String!
+
+  """Person address"""
+  address: PersonAddressInput!
+
+  """Person phone number"""
+  phoneNumber: String
+
+  """Default language for the user interface"""
+  defaultLanguageId: ID!
+
+  """Information about person newsletter consent"""
+  newsletterConsent: NewsletterConsentInput!
+
+  """Person first name"""
+  firstName: String!
+
+  """Person last name"""
+  lastName: String!
+
+  """Person birth day"""
+  birthDay: String!
+
+  """Country in which the person was born"""
+  birthCountryId: ID
+
+  """Location of birth"""
+  birthPlace: String
+
+  """Person gender"""
+  gender: String
+}
+
+type UpdateNaturalPersonPayload {
+  person: NaturalPerson!
+}
+
+input UpdatePriceListInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Year for which the price list is"""
+  year: Int!
+
+  """Name used to describe this price list"""
+  name: String!
+
+  """Code for this price list"""
+  code: String!
+}
+
+input UpdatePriceListItemInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Service for which the price is"""
+  serviceId: ID!
+
+  """From when should this price be applied"""
+  dateFrom: DateTimeTz!
+
+  """Price with up to two decimal places"""
+  price: String!
+}
+
+type UpdatePriceListItemPayload {
+  priceListItem: PriceListItem!
+}
+
+type UpdatePriceListPayload {
+  priceList: PriceList!
+}
+
+input UpdateReservationAccommodationInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Accommodation type category identifier"""
+  accommodationTypeCategoryId: ID!
+}
+
+type UpdateReservationAccommodationPayload {
+  """Updated accommodation"""
+  accommodation: ReservationAccommodation!
+}
+
+input UpdateReservationInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Current reservation status"""
+  status: ReservationStatus!
+}
+
+type UpdateReservationPayload {
+  """Reservation that has been updated"""
+  reservation: Reservation!
+}
+
+input UpdateRetentionInput {
+  """Retention id to be updated"""
+  id: ID!
+
+  """Accommodation id that is under retention"""
+  accommodationId: ID!
+
+  """Time period during the accommodation is under retention"""
+  during: DateTimeRangeInput!
+
+  """Reason for the retention"""
+  reason: String!
+
+  """Description of the retention"""
+  description: String
+}
+
+type UpdateRetentionPayload {
+  retention: Retention!
+}
+
+input UpdateServiceInput {
+  id: ID!
+  code: String!
+  name: String!
+  taxId: String!
+  manuallyAddable: Boolean!
+}
+
+type UpdateServicePayload {
+  service: Service!
+}
+
+input UpdateTagInput {
+  """Tag unique code"""
+  id: ID!
+
+  """Tag name"""
+  name: String!
+}
+
+type UpdateTagPayload {
+  tag: Tag!
+}
+
+input UpdateTaxInput {
+  """Internal identifier"""
+  id: ID!
+
+  """Tax descriptive name"""
+  name: String!
+
+  """Tax value in percentage with up to two decimals"""
+  rate: Float!
+
+  """Time from which this particular tax is active"""
+  validFrom: DateTimeTz!
+
+  """Time until this particular tax is active"""
+  validTo: DateTimeTz
+}
+
+type UpdateTaxPayload {
+  tax: Tax!
+}
+
+input UpdateUserInput {
+  id: ID!
+  email: String!
+  roles: [UserRole!]!
+}
+
+type UpdateUserPayload {
+  user: User!
+}
+
+input UpdateVisitorInput {
+  """Internal identifier"""
+  visitorId: ID!
+
+  """Visitor first name"""
+  firstName: String!
+
+  """Visitor first name"""
+  lastName: String!
+}
+
+type UpdateVisitorPayload {
+  visitor: Visitor!
+}
+
+scalar UploadedFile
+
+type User {
+  """Internal identifier"""
+  id: ID!
+  email: String!
+  roles: [UserRole!]!
+}
+
+input UserLoginInput {
+  email: String!
+  password: String!
+}
+
+type UserLoginPayload {
+  user: User!
+  token: String!
+}
+
+enum UserRole {
+  USER
+  BOOKER
+  ADMIN
+}
+
+input UserSetPasswordInput {
+  inviteToken: String!
+  password: String!
+}
+
+type UserSetPasswordPayload {
+  user: User!
+}
+
+"""Visitor"""
+type Visitor {
+  """Internal identifier"""
+  id: ID!
+
+  """Current visitor status"""
+  status: String!
+
+  """Visitor first name"""
+  firstName: String!
+
+  """Visitor first name"""
+  lastName: String!
+
+  """
+  List of accommodations with a range during which a visitor wants to reserve an accommodation
+  """
+  accommodations: [VisitorAccommodation!]!
+}
+
+"""Visitor accommodation"""
+type VisitorAccommodation {
+  """Internal identifier"""
+  id: ID!
+
+  """Accommodation identifier"""
+  accommodation: Accommodation!
+
+  """Time period during which visitor wants to reserve accommodation"""
+  during: DateTimeRange!
+}
