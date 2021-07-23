@@ -50,8 +50,13 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd maboo-frontend
-          touch test.js
+          touch test1.js
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
           path: ./maboo-frontend
+          token: ${{ secrets.PAT }}
+          body: "Most recent update of graphQL types. If there are any linter errors, fetch the branch locally and fix any errors."
+          assignees: ShockwaVee
+          reviwers: ShockwaVee
+          title: "feat/update-types"
