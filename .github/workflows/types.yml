@@ -16,6 +16,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: "./maboo-backend/vendor"
+          key: php-${{ hashFiles('**/composer.lock') }}
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
