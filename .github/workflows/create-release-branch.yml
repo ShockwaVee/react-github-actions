@@ -13,7 +13,7 @@ jobs:
       - name: Generate the release messages
         id: releaseMessage
         run: |
-          output=$(node ./bin/test.js)
+          output=$(node /bin/test.js)
           echo "::set-output name=output::$output"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.1
@@ -21,4 +21,5 @@ jobs:
           title: 'release: TODO DATE'
           body: ${{steps.releaseMessage.outputs.output}}
           assignees: 'ShockwaVee'
+          base: 'AB-123'
           
