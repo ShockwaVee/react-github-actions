@@ -30,8 +30,7 @@ jobs:
       - name: Increment Version Number
         id: increment_version
         run: |
-          input="${{ env.latest_tag }}"
-          version_number=$(echo "$input" | sed -E 's/r([0-9]{3}).*/\1/')
+          version_number=$(echo "${{ env.latest_tag }}" | sed -E 's/r([0-9]{3}).*/\1/')
           next_version_number=$((version_number + 1))
           echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
           
