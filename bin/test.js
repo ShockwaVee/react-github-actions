@@ -1,3 +1,1 @@
-(function main() {
-  return 'rtest';
-})()
+console.log('test');
