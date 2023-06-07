@@ -10,12 +10,6 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: 'AB-123'
-      - name: Create a new branch
-        run: |
-          git checkout -b release/111
-          git push origin release/111
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -24,11 +18,6 @@ jobs:
         id: releaseMessage
         run: echo "::set-output name=output::$(node ./bin/test.js)"
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: 'release: TODO DATE'
-          body: ${{steps.releaseMessage.outputs.output}}
-          assignees: 'ShockwaVee'
-          base: 'main'
-          branch: 'release/111'
+        run: |
+          gh pr create --title "Release Pull Request" --body "${{steps.releaseMessage.outputs.output}}" --base main --head AB-123
           
