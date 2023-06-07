@@ -18,6 +18,8 @@ jobs:
         id: releaseMessage
         run: echo "::set-output name=output::$(node ./bin/test.js)"
       - name: Create Pull Request
+        env: 
+          GITHUB_TOKEN: ${{secrets.PAT}}
         run: |
           gh pr create --title "Release Pull Request" --body "${{steps.releaseMessage.outputs.output}}" --base main --head AB-123
           
