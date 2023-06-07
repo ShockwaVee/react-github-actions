@@ -23,7 +23,6 @@ jobs:
           title: 'release: TODO DATE'
           body: ${{steps.releaseMessage.outputs.output}}
           assignees: 'ShockwaVee'
-          head: 'AB-123'
           base: 'main'
           branch: 'release/111'
           
