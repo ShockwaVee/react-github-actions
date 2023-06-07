@@ -9,11 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
       - name: Generate the release messages
         id: releaseMessage
         run: |
-          output=$(node /bin/test.js)
+          output=$(node ./bin/test.js)
           echo "::set-output name=output::$output"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.1
