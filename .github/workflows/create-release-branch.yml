@@ -45,5 +45,5 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{secrets.PAT}}
         run: |
-          gh pr create --title "release: ${{steps.version-number.outputs.version-number}}" --body "${{steps.release-message.outputs.output}}" --base main
+          gh pr create --title "release: ${{date +'%d %b %Y'}}" --body "${{steps.release-message.outputs.output}}" --base main
           
