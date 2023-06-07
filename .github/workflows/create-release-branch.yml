@@ -18,24 +18,37 @@ jobs:
         with:
           node-version: 16
           
+      - name: Get Latest Release Tag
+        id: latest_release
+        run: |
+          response=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                       --header "Accept: application/vnd.github.v3+json" \
+                       "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+
+          tag=$(echo "${response}" | jq -r '.tag_name')
+
+          echo "latest_tag=${tag}" >> $GITHUB_ENV
+          
+      - name: Increment Version Number
+        id: increment_version
+        run: |
+          input="${{ env.latest_tag }}"
+          version_number=$(echo "$input" | sed -E 's/r([0-9]{3}).*/\1/')
+          next_version_number=$((version_number + 1))
+          echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
+          
+      - name: Create a new branch
+        run: |
+          git checkout -b "release/${{ env.next_version_number }}"
+          git push origin "release/${{ env.next_version_number }}"
+          
       - name: Generate the release messages
         id: release-message
-        run: |
-          ls
-          pwd
-          cd bin/
-          ls
-          echo "$(node ./test.js)" >> $GITHUB_PATH
+        run: echo "$(node ./bin/test.js)" >> $GITHUB_PATH
         
       - name: Create Pull Request
         env: 
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           current_date=$(date +'%d %b %Y')
-          version_number=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                               --header "Accept: application/vnd.github.v3+json" \
-                               "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
-                               | jq -r '.tag_name' | sed -E 's/r([0-9]{3}).*/\1/')
-          git checkout -b "release/${version_number}"
-          git push origin "release/${version_number}"
-          gh pr create --title "release: $current_date" --body "$(<${GITHUB_PATH})" --base main
+          gh pr create --title "$current_date" --body "$(<${GITHUB_PATH})" --base main
