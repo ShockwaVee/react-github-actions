@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'AB-123'
+          ref: 'refs/heads/AB-123'
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
