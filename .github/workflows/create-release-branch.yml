@@ -16,9 +16,7 @@ jobs:
           node-version: 16
       - name: Generate the release messages
         id: releaseMessage
-        run: |
-          output=$(node ./bin/test.js)
-          echo "::set-output name=output::$output"
+        run: echo "::set-output name=output::$(node ./bin/test.js)"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.1
         with:
