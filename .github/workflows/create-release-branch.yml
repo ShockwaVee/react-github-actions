@@ -12,10 +12,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Generate the release messages
         id: releaseMessage
-        run: node bin/test.js
+        run: |
+          output=$(node ./bin/test.js)
+          echo "::set-output name=output::$output"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.1
         with:
           title: 'release: TODO DATE'
-          body: ${{steps.releaseMessage.outputs.time}}
+          body: ${{steps.releaseMessage.outputs.output}}
           assignees: 'ShockwaVee'
+          
