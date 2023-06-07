@@ -48,4 +48,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           current_date=$(date +'%d %b %Y')
-          gh pr create --title "release: $current_date" --body "$(<${GITHUB_PATH})" --base main
+          gh pr create --title "release: $current_date" --body "$(<${GITHUB_PATH})" --base main --assignee "ShockwaVee"
