@@ -1,0 +1,20 @@
+name: Create release branch
+
+on:
+  workflow_dispatch
+
+jobs:
+  create-release-branch:
+    name: Create the release branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate the release messages
+          id: releaseMessage
+          run: node bin/test.js
+      - name: Create Pull Request
+          uses: peter-evans/create-pull-request@v5.0.1
+          title: 'release: TODO DATE'
+          body: ${{steps.releaseMessage.outputs.time}}
+          assignees: 'ShockwaVee'
