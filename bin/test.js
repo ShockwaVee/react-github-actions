@@ -88,7 +88,7 @@ function parseMessage(commit) {
 
 async function main() {
   const delimiter = '-----';
-  const commits = execSync(`git log master..HEAD --pretty='format:%s%n%n%b${delimiter}'`)
+  const commits = execSync(`git log main..HEAD --pretty='format:%s%n%n%b${delimiter}'`)
     .toString()
     .replaceAll('\r\n', '\n')
     .split(delimiter)
