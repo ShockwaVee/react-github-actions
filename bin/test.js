@@ -98,6 +98,8 @@ async function main() {
       acc[commit.type] = (acc[commit.type] ?? []).concat(commit);
       return acc;
     }, {});
+  
+  console.log(commits);
 
   const featuresList = [...(commits.feature ?? []), ...(commits.feat ?? [])].map((commit) => formatCommit(commit));
   const updatesList = commits.update?.map((commit) => formatCommit(commit));
