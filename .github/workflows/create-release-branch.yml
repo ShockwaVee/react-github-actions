@@ -44,11 +44,11 @@ jobs:
         id: release-message
         run: |
           echo $(git log origin/main..HEAD)
-          echo "$(node ./bin/test.js)" >> $GITHUB_PATH
+          echo "message=$(node ./bin/test.js)" >> "$GITHUB_OUTPUT"
         
       - name: Create Pull Request
         env: 
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           current_date=$(date +'%d %b %Y')
-          gh pr create --title "release: $current_date" --body "$(<${GITHUB_PATH})" --base main --assignee "ShockwaVee"
+          gh pr create --title "release: $current_date" --body "${{ steps.release-message.outputs.message }}" --base main --assignee "ShockwaVee"
