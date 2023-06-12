@@ -43,6 +43,7 @@ jobs:
         id: release-message
         run: |
           git fetch origin main:refs/remotes/origin/main
+          git diff --name-only "release/${{env.next_version_number}}..origin/main"
           echo "$(node ./bin/test.js)" >> $GITHUB_PATH
         
       - name: Create Pull Request
