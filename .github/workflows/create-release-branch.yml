@@ -41,7 +41,9 @@ jobs:
           
       - name: Generate the release messages
         id: release-message
-        run: echo "$(node ./bin/test.js)" >> $GITHUB_PATH
+        run: |
+          git fetch origin master:refs/remotes/origin/master
+          echo "$(node ./bin/test.js)" >> $GITHUB_PATH
         
       - name: Create Pull Request
         env: 
