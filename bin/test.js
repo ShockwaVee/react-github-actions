@@ -113,7 +113,6 @@ async function main() {
     .filter(Boolean)
     .join('\n');
 
-  console.log('pls')
   console.log(rendered);
 }
 
