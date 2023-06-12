@@ -1,3 +1,5 @@
+const execSync = require('child_process').execSync;
+
 const commits = execSync(`git log master..HEAD --pretty='format:%s%n%n%b${delimiter}'`)
     .toString()
     .replaceAll('\r\n', '\n')
