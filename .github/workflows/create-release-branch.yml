@@ -43,8 +43,7 @@ jobs:
       - name: Generate the release messages
         id: release-message
         run: |
-          git fetch origin main
-          echo $(git log main..HEAD)
+          echo $(git log origin/main..HEAD)
           echo "$(node ./bin/test.js)" >> $GITHUB_PATH
         
       - name: Create Pull Request
