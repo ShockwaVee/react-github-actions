@@ -113,7 +113,6 @@ async function main() {
     .filter(Boolean)
     .join('\n');
 
-  execSync(`echo "${rendered}" | pbcopy`);
   console.log(rendered);
   console.log('Release note copied to clipboard');
 }
