@@ -40,6 +40,7 @@ function cleanBody(body) {
 }
 
 function parseMessage(commit) {
+  console.log(commit);
   const lines = commit
     .split(/\n{2}/)
     .map((p) => p.trim())
