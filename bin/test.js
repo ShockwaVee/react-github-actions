@@ -113,8 +113,8 @@ async function main() {
     .filter(Boolean)
     .join('\n');
 
+  console.log('pls')
   console.log(rendered);
-  console.log('Release note copied to clipboard');
 }
 
 main();
