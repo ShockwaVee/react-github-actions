@@ -1,122 +1,28 @@
-/* eslint-env node */
-/* eslint-disable no-console */
+console.log(`
+## 🧭 New Features
 
-const execSync = require('child_process').execSync;
+* Implemented collapse of boards and lists on gantt layout - [Task-4653671](https://app.productive.io/109-productive/tasks/task/4653671)
+* Users can now create, edit and delete trigger for their automation through new automation builder component. - [Task-4813940](https://app.productive.io/109-productive/tasks/task/4813940)
 
-const SUBJECT_REGEX = /(\w+?)(!)?:.*/i;
+## ⭐️ Updates
 
-const createItem = (title, body) => {
-  return title &&
-    body?.length &&
-`## ${title}
+* Allow decimal points on invoice tax line item - [Task-4911517](https://app.productive.io/109-productive/tasks/task/4911517)
 
-${body.join('\n')}
-`;
-};
+## 🧪 Beta features
 
-function formatCommit(commit) {
-  const taskFooter = commit.footers.find((footer) => footer.startsWith('Task:'));
-  let taskId;
+* Introduced a new beta flag for skipping hourly rate conversion on frontend for hourly rate, opts-in the same conversion on backend
+* Show that purchase orders will be deleted when deleting a budget
 
-  if (taskFooter) {
-    taskId = taskFooter.split(':')[1]?.trim();
-  }
-  return commit.changes
-    .map((change) => `* ${change}${taskId ? ` - [Task-${taskId}](https://app.productive.io/109-productive/tasks/task/${taskId})` : ''}`)
-    .join('\n');
-}
+## 🐞 Bugs Fixed
 
-function cleanBody(body) {
-  return body
-    .reduce((acc, bodyItem) => {
-      return acc.concat(bodyItem.split('\n'));
-    }, [])
-    .map((bodyItem) => {
-      return bodyItem
-        .replace('*', '')
-        .trim();
-    })
-    .filter(Boolean);
-}
-
-function parseMessage(commit) {
-  console.log(commit);
-  const lines = commit
-    .split(/\n{2}/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-
-  if (!lines.length) {
-    return null;
-  }
-
-  const subject = lines[0];
-  const body = lines.length > 2 ?
-    lines.slice(1, lines.length - 1) :
-    lines.slice(1);
-  const footers = lines.length > 2 ?
-    lines[lines.length - 1]
-      .split('\n')
-      .filter(Boolean) :
-    [];
-
-  const subjectMatch = subject.trim().match(SUBJECT_REGEX);
-  const type = subjectMatch?.[1];
-
-  if (!type || !body.length) {
-    return null;
-  }
-
-  const isBreaking = Boolean(subjectMatch?.[2]);
-
-  const changes = cleanBody(body)
-    .map((change) => {
-      return `${isBreaking ? '⚠️ ' : ''}${change}`;
-    })
-    .filter((change) => !(/Task:\s\d+/i).test(change));
-    // Remove formatted data from body - invalid message
-
-  if (changes.length === 0) {
-    return null;
-  }
-
-  return {
-    type,
-    changes,
-    footers
-  };
-}
-
-async function main() {
-  const delimiter = '-----';
-  const commits = execSync(`git log origin/main..HEAD --pretty='format:%s%n%n%b${delimiter}'`)
-    .toString()
-    .replaceAll('\r\n', '\n')
-    .split(delimiter)
-    .map(parseMessage)
-    .filter(Boolean)
-    .reduce((acc, commit) => {
-      acc[commit.type] = (acc[commit.type] ?? []).concat(commit);
-      return acc;
-    }, {});
-  
-  console.log(commits);
-
-  const featuresList = [...(commits.feature ?? []), ...(commits.feat ?? [])].map((commit) => formatCommit(commit));
-  const updatesList = commits.update?.map((commit) => formatCommit(commit));
-  const betaFlagsList = commits.beta?.map((commit) => formatCommit(commit));
-  const bugsList = commits.fix?.map((commit) => formatCommit(commit));
-
-  const rendered = [
-    createItem('🧭 New Features', featuresList),
-    createItem('⭐️ Updates', updatesList),
-    createItem('🧪 Beta features', betaFlagsList),
-    createItem('🐞 Bugs Fixed', bugsList)
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  console.log(rendered);
-}
-
-main();
+* Fixed an issue where users had an option to repeat tasks biweekly
+* Fixed searching project members - [Task-4960057](https://app.productive.io/109-productive/tasks/task/4960057)
+* Removed the client access settings from internal budgets - [Task-4840019](https://app.productive.io/109-productive/tasks/task/4840019)
+* Percentages in financials blocks component now support some edge casese
+* Allow saving subscription form if it's not dirty - [Task-4884578](https://app.productive.io/109-productive/tasks/task/4884578)
+* Fixed sorting by due date and assignee on tasks screen - [Task-4941997](https://app.productive.io/109-productive/tasks/task/4941997)
+* Client roles are removed from budget membership picker - [Task-4877159](https://app.productive.io/109-productive/tasks/task/4877159)
+* Removed the label "Overhead - Turned off/on" if overhead is disabled in settings - [Task-4936699](https://app.productive.io/109-productive/tasks/task/4936699)
+* Fixed the option to hide and show fields on the task modal - [Task-4913101](https://app.productive.io/109-productive/tasks/task/4913101)
+* Default date format selected in settings is now being used inside all tables, lists, boards, calendars and timelines
+`)
