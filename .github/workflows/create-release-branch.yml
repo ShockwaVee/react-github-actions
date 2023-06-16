@@ -43,7 +43,10 @@ jobs:
         id: release-message
         run: |
           echo $(git log origin/main..HEAD)
-          echo "message=$(node ./bin/test.js)" >> "$GITHUB_OUTPUT"
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "message<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "node ./bin/test.js" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
         
       - name: Create Pull Request
         env: 
