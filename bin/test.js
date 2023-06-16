@@ -22,7 +22,7 @@ console.log(`
 * Allow saving subscription form if it's not dirty - [Task-4884578](https://app.productive.io/109-productive/tasks/task/4884578)
 * Fixed sorting by due date and assignee on tasks screen - [Task-4941997](https://app.productive.io/109-productive/tasks/task/4941997)
 * Client roles are removed from budget membership picker - [Task-4877159](https://app.productive.io/109-productive/tasks/task/4877159)
-* Removed the label Overhead - Turned off/on if overhead is disabled in settings - [Task-4936699](https://app.productive.io/109-productive/tasks/task/4936699)
+* Removed the label "Overhead - Turned off/on" if overhead is disabled in settings - [Task-4936699](https://app.productive.io/109-productive/tasks/task/4936699)
 * Fixed the option to hide and show fields on the task modal - [Task-4913101](https://app.productive.io/109-productive/tasks/task/4913101)
 * Default date format selected in settings is now being used inside all tables, lists, boards, calendars and timelines
 `)
