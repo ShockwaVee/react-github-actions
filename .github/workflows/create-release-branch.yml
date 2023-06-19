@@ -43,7 +43,7 @@ jobs:
           else  # If today is Thursday, Friday, Saturday, or Sunday
             next_day=$(date -d "next Wednesday" +'%Y-%m-%d')
           fi
-          echo "date=next_date" >> "$GITHUB_OUTPUT"
+          echo "date=$next_date" >> "$GITHUB_OUTPUT"
           
       - name: Create a new branch
         run: |
