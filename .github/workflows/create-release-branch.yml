@@ -38,10 +38,10 @@ jobs:
         id: next-release-date
         run: |
           today=$(date +'%u')
-          if [ "$today" -le 3 ]; then
-            next_date=$(date -d "next Monday" +'%d %b %Y')
-          else
+          if [ "$today" -ge 3 ]; then
             next_date=$(date -d "next Wednesday" +'%d %b %Y')
+          else
+            next_date=$(date -d "next Monday" +'%d %b %Y')
           fi
           echo "date=$next_date" >> "$GITHUB_OUTPUT"
           
