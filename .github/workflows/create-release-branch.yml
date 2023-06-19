@@ -34,6 +34,17 @@ jobs:
           next_version_number=$((version_number + 1))
           echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
           
+      - name: Calculate Next Monday or Wednesday
+        id: next-release-date
+        run: |
+          today=$(date +'%u')  # Get the current day of the week (1-7, where 1 is Monday)
+          if [ "$today" -le 3 ]; then  # If today is Monday, Tuesday, or Wednesday
+            next_day=$(date -d "next Monday" +'%Y-%m-%d')
+          else  # If today is Thursday, Friday, Saturday, or Sunday
+            next_day=$(date -d "next Wednesday" +'%Y-%m-%d')
+          fi
+          echo "date=next_date" >> "$GITHUB_OUTPUT"
+          
       - name: Create a new branch
         run: |
           git checkout -b "release/${{ env.next_version_number }}"
@@ -51,5 +62,4 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          current_date=$(date +'%d %b %Y')
-          gh pr create --title "release: $current_date" --body "${{ steps.release-message.outputs.message }}" --base main --assignee "ShockwaVee"
+          gh pr create --title "release: ${{ steps.next-release-date.outputs.date }}" --body "${{ steps.release-message.outputs.message }}" --base main --assignee "ShockwaVee"
