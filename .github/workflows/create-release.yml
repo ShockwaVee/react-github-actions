@@ -47,7 +47,6 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          body="${{ steps.pr-body.outputs.body }}"
           current_date=$(date +'%d %b %Y')
           gh release create "r${{ env.next_version_number}}" --target main --title "Release $current_date" --notes "ehe"
 
