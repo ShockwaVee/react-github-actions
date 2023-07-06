@@ -39,7 +39,7 @@ jobs:
           pr_body=$(gh pr view $pr_number --json body --jq '.body')
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "body<<$EOF" >> "$GITHUB_OUTPUT"
-          echo $pr_body >> "$GITHUB_OUTPUT"
+          echo $pr_body | sed 's/"/\\"/g' >> "$GITHUB_OUTPUT"
           echo "$EOF" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
