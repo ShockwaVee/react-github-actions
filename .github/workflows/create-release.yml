@@ -36,7 +36,7 @@ jobs:
         run: |
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
-          pr_body=$(gh pr view $pr_number --json body | jq '.body' | sed "s/\"/'/g")
+          pr_body=$(gh pr view $pr_number --json body | jq '.body'
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo $pr_body >> $GITHUB_ENV
           
@@ -46,4 +46,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           current_date=$(date +'%d %b %Y')
-          gh release create "r${{ env.next_version_number}}" --target main --title "$current_date" --notes "${{ env.pr_body }}"
+          gh release create "r${{ env.next_version_number}}" --target main --title "$current_date" --notes ${{ env.pr_body }}
