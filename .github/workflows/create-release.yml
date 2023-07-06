@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           branch_name="release/${{ env.next_version_number }}"
-          pr_number=$(gh pr list --state all --base main --search "$branch_name" --json number --jq '.[0].number')
+          pr_number=$(gh pr list --state all --search "$branch_name" --json number --jq '.[0].number')
           pr_body=$(gh pr view $pr_number --json body --jq '.body')
           echo "::set-output name=body::$pr_body"
 
