@@ -1,0 +1,44 @@
+name: Create Release from Pull Request
+
+on:
+  workflow_dispatch
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Get Latest Release Tag
+        id: latest_release
+        run: |
+          response=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                       --header "Accept: application/vnd.github.v3+json" \
+                       "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+
+          echo "latest_tag=$(echo "${response}" | jq -r '.tag_name')" >> $GITHUB_ENV
+          
+      - name: Increment Version Number
+        id: increment_version
+        run: |
+          version_number=$(echo "${{ env.latest_tag }}" | sed -E 's/r([0-9]{3}).*/\1/')
+          next_version_number=$((version_number + 1))
+          echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
+
+      - name: Get Pull Request Body
+        id: pr-body
+        run: |
+          branch_name="${{ github.event.inputs.branch }}"
+          pr_number=$(gh pr list --state all --base main --search "$branch_name" --json number --jq '.[0].number')
+          pr_body=$(gh pr view $pr_number --json body --jq '.body')
+          echo "::set-output name=body::$pr_body"
+
+      - name: Create Release
+        id: create-release
+        run: |
+          body="${{ steps.pr-body.outputs.body }}"
+          current_date=$(date +'%d %b %Y')
+          gh release create --target main --title "Release $current_date" --body "$body"
+
