@@ -37,7 +37,9 @@ jobs:
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
           pr_body=$(gh pr view $pr_number --json body --jq '.body')
-          echo "::set-output name=body::$pr_body"
+          echo "body<<$EOF" >> "$GITHUB_OUTPUT"
+          echo $pr_body >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create-release
@@ -46,5 +48,5 @@ jobs:
         run: |
           body="${{ steps.pr-body.outputs.body }}"
           current_date=$(date +'%d %b %Y')
-          gh release create "r$env.next_version_number" --target main --title "Release $current_date" --notes "$body --verify-tag"
+          gh release create "r${env.next_version_number}" --target main --title "Release $current_date" --notes "$body --verify-tag"
 
