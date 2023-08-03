@@ -59,6 +59,9 @@ jobs:
           # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
           channel-id: 'general'
           # For posting a simple plain text message
-          slack-message: ${{ env.release }}
+          payload: |
+            {
+              "text": ${{ env.release }}
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
