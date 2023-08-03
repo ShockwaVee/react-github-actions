@@ -61,7 +61,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": ${{ env.release }}
+              "text": ${{ steps.pr-body.outputs.release  }}
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
