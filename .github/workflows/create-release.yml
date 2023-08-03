@@ -59,6 +59,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
+              type: "mrkdwn",
               "text": "${{ env.release }}"
             }
         env:
