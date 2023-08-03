@@ -37,8 +37,10 @@ jobs:
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
-          release = $(cat release.txt)
-          echo "release=${$release//$'\n'/'%0A'}" >> $GITHUB_ENV
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "release<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "$(cat release.txt)" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
           
       - name: Create Release
         id: create-release
@@ -60,7 +62,7 @@ jobs:
           payload: |
             {
               type: "mrkdwn",
-              "text": "${{ env.release }}"
+              "text": "${{ steps.pr-body.output.release }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
