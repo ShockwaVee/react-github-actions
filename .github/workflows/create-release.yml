@@ -38,7 +38,7 @@ jobs:
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           slack_message=$(cat ./release.txt)
-          echo "release=${$slack_message//$'\n'/'%0A'}" >> $GITHUB_ENV 
+          echo "release=$($slack_message//$'\n'/'%0A')" >> $GITHUB_ENV 
           
       - name: Create Release
         id: create-release
