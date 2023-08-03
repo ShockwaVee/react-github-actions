@@ -62,7 +62,7 @@ jobs:
           payload: |
             {
               type: "mrkdwn",
-              "text": "${{ steps.pr-body.output.release }}"
+              "text": "${{ steps.pr-body.outputs.release }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
