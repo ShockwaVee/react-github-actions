@@ -67,7 +67,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": ${{ steps.slack-converter.outputs.text }}
+              "text": "${{ steps.slack-converter.outputs.text }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
