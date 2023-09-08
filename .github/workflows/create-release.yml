@@ -39,7 +39,7 @@ jobs:
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           file_contents=$(<"$input_file")
-          echo "release=${file_contents}" >> $GITHUB_ENV
+          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
@@ -53,7 +53,7 @@ jobs:
         id: slack-converter
         uses: LoveToKnow/slackify-markdown-action@v1.0.0
         with:
-          text: ${{ env.release }}
+          text: "${{ env.release }}"
             
 
       - name: Post to a Slack channel
@@ -67,7 +67,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": "${{ steps.slack-converter.outputs.text }}"
+              "text": ${{ steps.slack-converter.outputs.text }}
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
