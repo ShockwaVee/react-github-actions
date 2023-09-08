@@ -39,7 +39,7 @@ jobs:
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           file_contents=$(<"$input_file")
-          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
+          echo "release=${file_contents}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
