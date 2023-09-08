@@ -53,7 +53,7 @@ jobs:
         id: slack-converter
         uses: LoveToKnow/slackify-markdown-action@v1.0.0
         with:
-          text: env.release
+          text: ${{ env.release }}
             
 
       - name: Post to a Slack channel
