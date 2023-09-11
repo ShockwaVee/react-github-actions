@@ -69,7 +69,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": "${{ steps.release-message.outputs.message//$'\n'/\\n }}"
+              "text": "${steps.release-message.outputs.message//$'\n'/\\n }"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
