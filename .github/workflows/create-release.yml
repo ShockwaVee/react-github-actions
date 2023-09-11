@@ -67,6 +67,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
+              "type": "mrkdwn",
               "text": "${{ steps.slack-converter.outputs.text }}"
             }
         env:
