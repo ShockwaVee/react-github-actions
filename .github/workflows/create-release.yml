@@ -48,14 +48,6 @@ jobs:
         run: |
           current_date=$(date +'%d %b %Y')
           gh release create "r${{ env.next_version_number}}" --target main --title "$current_date" -F release.txt
-
-      - name: Generate the release messages
-        id: release-message
-        run: |
-          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "message<<$EOF" >> "$GITHUB_OUTPUT"
-          echo "$(node ./bin/test.js | sed 's/"/\\"/g')" >> "$GITHUB_OUTPUT"
-          echo "$EOF" >> "$GITHUB_OUTPUT"
             
 
       - name: Post to a Slack channel
@@ -69,7 +61,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": "${steps.release-message.outputs.message//$'\n'/\\n }"
+              "text": "${{ env.release }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
