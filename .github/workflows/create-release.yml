@@ -56,7 +56,6 @@ jobs:
           echo "message<<$EOF" >> "$GITHUB_OUTPUT"
           echo "$(node ./bin/test.js | sed 's/"/\\"/g')" >> "$GITHUB_OUTPUT"
           echo "$EOF" >> "$GITHUB_OUTPUT"
-          echo "release=$(node ./bin/test.js | sed 's/"/\\"/g'//$'\n'/\\n" >> $GITHUB_ENV
             
 
       - name: Post to a Slack channel
@@ -70,7 +69,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": "${{ env.release }}"
+              "text": "${{ steps.release-message.outputs.message//$'\n'/\\n }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
