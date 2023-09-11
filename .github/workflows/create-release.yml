@@ -48,7 +48,12 @@ jobs:
         run: |
           current_date=$(date +'%d %b %Y')
           gh release create "r${{ env.next_version_number}}" --target main --title "$current_date" -F release.txt
-            
+
+      - name: Slack Markdown Converter
+        id: slack-converter
+        uses: LoveToKnow/slackify-markdown-action@v1.0.0
+        with:
+          text: "${{ env.release }}"
 
       - name: Post to a Slack channel
         id: slack
@@ -61,7 +66,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "text": "${{ env.release }}"
+              "text": "${{ steps.slack-converter.outputs.text }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
