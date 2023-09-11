@@ -36,10 +36,10 @@ jobs:
         run: |
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
-          gh pr view $pr_number --json body | jq -r '.body' | sed -z 's/\n/\\n/g' | sed "s/\"/'/g)" >> release.txt
+          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g)" >> release.txt
           input_file="release.txt"
           file_contents=$(<"$input_file")
-          echo "release=${file_contents}" >> $GITHUB_ENV
+          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
