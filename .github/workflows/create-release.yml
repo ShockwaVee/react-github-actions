@@ -36,10 +36,11 @@ jobs:
         run: |
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
-          gh pr view $pr_number --json body | jq -r '.body'" >> release.txt
-          input_file="release.txt"
-          file_contents=$(<"$input_file")
-          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
+          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "message<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "$(gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g")" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
           
       - name: Create Release
         id: create-release
@@ -53,7 +54,7 @@ jobs:
         id: slack-converter
         uses: LoveToKnow/slackify-markdown-action@v1.0.0
         with:
-          text: "${{ env.release }}"
+          text: "${{ steps.pr-body.output.message }}"
 
       - name: Post to a Slack channel
         id: slack
