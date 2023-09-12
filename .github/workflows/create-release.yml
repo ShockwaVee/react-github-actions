@@ -39,7 +39,7 @@ jobs:
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           sed -i -E 's/## ([^\n]+)/\*\1\*/g' "$input_file"
-          sed -i -E 's/\[([^\]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
+          sed -i -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
           file_contents=$(<"$input_file")
           echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
           
