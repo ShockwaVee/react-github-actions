@@ -36,7 +36,7 @@ jobs:
         run: |
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
-          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" | awk '{ printf "%s ", $0 }' >> release.txt
+          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           today_date=$(date +"%d %b %Y")
           sed -i "s/'//g" "$input_file"
@@ -45,7 +45,8 @@ jobs:
           sed -i -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
           sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
           file_contents=$(<"$input_file")
-          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
+          formatted_json=$(echo "$file_contents" | tr '\n' ' ')
+          echo "release=${formatted_json//$'\n'/\\n}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
