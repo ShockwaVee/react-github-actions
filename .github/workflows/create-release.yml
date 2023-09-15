@@ -36,7 +36,7 @@ jobs:
         run: |
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
-          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" | tr '\n' ' ' >> release.txt
+          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           today_date=$(date +"%d %b %Y")
           sed -i "s/'//g" "$input_file"
@@ -45,7 +45,11 @@ jobs:
           sed -i -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
           sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
           file_contents=$(<"$input_file")
-          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "message<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "$(echo "release=${file_contents//$'\n'/\\n}")" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
+          # echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
@@ -73,7 +77,7 @@ jobs:
           payload: |
             {
               "type": "mrkdwn",
-              "text": "${{ env.release }}"
+              "text": "${{ steps.pr-body.outputs.release }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
