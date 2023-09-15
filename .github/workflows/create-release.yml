@@ -47,7 +47,7 @@ jobs:
           file_contents=$(<"$input_file")
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "message<<$EOF" >> "$GITHUB_OUTPUT"
-          echo "$(echo "release=${file_contents//$'\n'/\\n}")" >> "$GITHUB_OUTPUT"
+          echo ${file_contents//$'\n'/\\n} >> "$GITHUB_OUTPUT"
           echo "$EOF" >> "$GITHUB_OUTPUT"
           # echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
           
@@ -71,7 +71,7 @@ jobs:
           payload: |
             {
               "type": "mrkdwn",
-              "text": "${{ steps.pr-body.outputs.release }}"
+              "text": "${{ steps.pr-body.outputs.message }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
