@@ -43,8 +43,7 @@ jobs:
           # converts markdown headings, links and lists to slack style
           sed -i -E 's/## ([^\n]+)/\*\1\*/g; s/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g; s/^\s*\*\s+(.*)$/• \1/g' release.txt
           file_contents=$(<"$input_file")
-          formatted_json=$(toJSON($file_contents))
-          echo "release=${$formatted_json//$'\n'/\n}" >> $GITHUB_ENV
+          echo "release=${formatted_json//$'\n'/\\n}" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
