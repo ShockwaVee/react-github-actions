@@ -39,7 +39,7 @@ jobs:
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
           input_file="release.txt"
           today_date=$(date +"%d %b %Y")
-          sed -i "1i*$today_date*/\n" "$input_file"
+          sed -i "1i*$today_date*%0A" "$input_file"
           # converts markdown headings, links and lists to slack style
           sed -i -E 's/## ([^\n]+)/\*\1\*/g; s/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g; s/^\s*\*\s+(.*)$/• \1/g' release.txt
           file_contents=$(<"$input_file")
