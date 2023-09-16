@@ -37,12 +37,12 @@ jobs:
           branch_name="release/${{ env.next_version_number }}"
           pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
           gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
-          input_file="release.txt"
+          cp release.txt release-slack.txt
+          input_file="release-slack.txt"
           today_date=$(date +"%d %b %Y")
           sed -i "1i**$today_date**\n" "$input_file"
           # converts markdown headings, links and lists to slack style
           sed -i -E 's/## ([^\n]+).$/\*\*\1\*\*/g' "$input_file"
-          # sed -i -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
           sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
           file_contents=$(<"$input_file")
           echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
