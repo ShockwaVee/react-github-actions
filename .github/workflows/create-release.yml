@@ -67,8 +67,7 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "type": "mrkdwn",
-              "text": "${{ env.release }}"
+              "text": "${{ toJSON(env.release) }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
