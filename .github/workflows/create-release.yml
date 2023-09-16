@@ -41,7 +41,7 @@ jobs:
           today_date=$(date +"%d %b %Y")
           sed -i "1i**$today_date**" "$input_file"
           # converts markdown headings, links and lists to slack style
-          sed -i -E 's/## ([^\n]+)$/\*\*\1\*\*/g' "$input_file"
+          sed -i -E 's/## ([^\n]+).$/\*\*\1\*\*/g' "$input_file"
           sed -i -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' "$input_file" 
           sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
           file_contents=$(<"$input_file")
