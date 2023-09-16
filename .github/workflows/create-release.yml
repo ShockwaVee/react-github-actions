@@ -44,7 +44,7 @@ jobs:
           sed -i -E 's/## ([^\n]+)/\*\1\*/g; s/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g; s/^\s*\*\s+(.*)$/• \1/g' release.txt
           file_contents=$(<"$input_file")
           formatted_json=$(echo "$file_contents" | tr '\n' '%0A')
-          echo "release=${formatted_json//$'\n'/\\n}" >> $GITHUB_ENV
+          echo "release=${formatted_json//$'\n'/'%0A'" >> $GITHUB_ENV
           
       - name: Create Release
         id: create-release
