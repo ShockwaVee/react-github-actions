@@ -1,7 +1,9 @@
 name: Create Release from Pull Request
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  repository_dispatch:
+    types: [webhook]
 
 jobs:
   create-release:
