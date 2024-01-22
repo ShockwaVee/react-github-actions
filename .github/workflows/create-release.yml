@@ -1,0 +1,82 @@
+name: Create Release from Pull Request
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [webhook]
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        
+      - name: Get Latest Release Tag
+        id: latest_release
+        run: |
+          response=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                       --header "Accept: application/vnd.github.v3+json" \
+                       "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+
+          echo "latest_tag=$(echo "${response}" | jq -r '.tag_name')" >> $GITHUB_ENV
+          
+      - name: Increment Version Number
+        id: increment_version
+        run: |
+          version_number=$(echo "${{ env.latest_tag }}" | sed -E 's/r([0-9]{3}).*/\1/')
+          next_version_number=$((version_number + 1))
+          echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
+
+      - name: Get Pull Request Body
+        id: pr-body
+        env: 
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          branch_name="release/${{ env.next_version_number }}"
+          pr_number=$(gh pr list --state all --search "release:" --assignee "ShockwaVee" --json number --jq '.[0].number')
+          gh pr view $pr_number --json body | jq -r '.body' | sed "s/\"/'/g" >> release.txt
+          cp release.txt release-slack.txt
+          input_file="release-slack.txt"
+          today_date=$(date +"%d %b %Y")
+          sed -i "1i**$today_date**\n" "$input_file"
+          # converts markdown headings, links and lists to slack style
+          sed -i -E 's/## ([^\n]+).$/\*\*\1\*\*/g' "$input_file"
+          sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
+          file_contents=$(<"$input_file")
+          echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
+          
+      - name: Create Release
+        id: create-release
+        env: 
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          current_date=$(date +'%d %b %Y')
+          gh release create "r${{ env.next_version_number}}" --target main --title "$current_date" -F release.txt
+
+      - name: Slack Markdown Converter
+        id: slack-converter
+        uses: LoveToKnow/slackify-markdown-action@v1.0.0
+        with:
+          text: ${{ toJSON(env.release)}}
+            
+
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
+          channel-id: 'general'
+          # For posting a simple plain text message
+          payload: |
+            {
+              "text": ${{ steps.slack-converter.outputs.text }},
+              "type": "mrkdwn"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

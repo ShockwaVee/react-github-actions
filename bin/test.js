@@ -25,4 +25,4 @@ console.log(`
 * Removed the label "Overhead - Turned off/on" if overhead is disabled in settings - [Task-4936699](https://app.productive.io/109-productive/tasks/task/4936699)
 * Fixed the option to hide and show fields on the task modal - [Task-4913101](https://app.productive.io/109-productive/tasks/task/4913101)
 * Default date format selected in settings is now being used inside all tables, lists, boards, calendars and timelines
-`)
+`);

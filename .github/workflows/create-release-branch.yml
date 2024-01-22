@@ -1,0 +1,65 @@
+name: Create release branch
+
+on:
+  workflow_dispatch
+
+jobs:
+  create-release-branch:
+    name: Create the release branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'AB-123'
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          
+      - name: Get Latest Release Tag
+        id: latest_release
+        run: |
+          response=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                       --header "Accept: application/vnd.github.v3+json" \
+                       "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+
+          echo "latest_tag=$(echo "${response}" | jq -r '.tag_name')" >> $GITHUB_ENV
+          
+      - name: Increment Version Number
+        id: increment_version
+        run: |
+          version_number=$(echo "${{ env.latest_tag }}" | sed -E 's/r([0-9]{3}).*/\1/')
+          next_version_number=$((version_number + 1))
+          echo "next_version_number=${next_version_number}" >> $GITHUB_ENV
+          
+      - name: Calculate Next Monday or Wednesday
+        id: next-release-date
+        run: |
+          today=$(date +'%u')
+          if [ "$today" -ge 3 ]; then
+            next_date=$(date -d "next Monday" +'%d %b %Y')
+          else
+            next_date=$(date -d "next Wednesday" +'%d %b %Y')
+          fi
+          echo "date=$next_date" >> "$GITHUB_OUTPUT"
+          
+      - name: Create a new branch
+        run: |
+          git checkout -b "release/${{ env.next_version_number }}"
+          git push origin "release/${{ env.next_version_number }}"
+          
+      - name: Generate the release messages
+        id: release-message
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "message<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "$(node ./bin/test.js | sed 's/"/\\"/g')" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
+        
+      - name: Create Pull Request
+        env: 
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          gh pr create --title "release: ${{ steps.next-release-date.outputs.date }}" --body "${{ steps.release-message.outputs.message }}" --base main --assignee "ShockwaVee"

@@ -1,0 +1,20 @@
+name: "Verify build"
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  verifyBuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # checks out the whole project
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm ci ## installs dependencies, but faster - similar to yarn install --frozen-lockfile 
+      - run: npm run lint:check
+      - run: npm test -- --coverage
