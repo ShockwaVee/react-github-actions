@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        
+
       - name: Get Latest Release Tag
         id: latest_release
         run: |
@@ -23,7 +23,7 @@ jobs:
                        "https://api.github.com/repos/${{ github.repository }}/releases/latest")
 
           echo "latest_tag=$(echo "${response}" | jq -r '.tag_name')" >> $GITHUB_ENV
-          
+
       - name: Increment Version Number
         id: increment_version
         run: |
@@ -33,7 +33,7 @@ jobs:
 
       - name: Get Pull Request Body
         id: pr-body
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           branch_name="release/${{ env.next_version_number }}"
@@ -48,10 +48,10 @@ jobs:
           sed -i -E 's/^\s*\*\s+(.*)$/• \1/g' "$input_file"
           file_contents=$(<"$input_file")
           echo "release=${file_contents//$'\n'/\\n}" >> $GITHUB_ENV
-          
+
       - name: Create Release
         id: create-release
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           current_date=$(date +'%d %b %Y')
@@ -62,7 +62,6 @@ jobs:
         uses: LoveToKnow/slackify-markdown-action@v1.0.0
         with:
           text: ${{ toJSON(env.release)}}
-            
 
       - name: Post to a Slack channel
         id: slack
