@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   create-release-branch:
-    name: Create the release branch
+    name: Create the release branch #
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
