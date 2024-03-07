@@ -59,7 +59,7 @@ jobs:
         with:
           path: ./maboo-frontend
           token: ${{ secrets.PAT }}
-          body: "Most recent update of graphQL types. If there are any linter errors, fetch the branch locally and fix any errors."
+          body: 'Most recent update of graphQL types. If there are any linter errors, fetch the branch locally and fix any errors.'
           assignees: ShockwaVee
           reviwers: ShockwaVee
-          title: "feat/update-types"
+          title: 'feat/update-types'

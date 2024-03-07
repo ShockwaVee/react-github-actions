@@ -1,4 +1,4 @@
-name: "Verify build"
+name: 'Verify build'
 on:
   pull_request:
     branches:
@@ -15,6 +15,6 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - run: npm ci ## installs dependencies, but faster - similar to yarn install --frozen-lockfile 
+      - run: npm ci ## installs dependencies, but faster - similar to yarn install --frozen-lockfile
       - run: npm run lint:check
       - run: npm test -- --coverage
